@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+   <link rel="shortcut icon" href="../_global/css/images/favicon.png">
+  <!-- CSS Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../_global/libs/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../_global/css/style_et_1.css">
+   <link rel="stylesheet" href="../_global/libs/jquery/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- <link rel="stylesheet" href="_global/libs/jquery/theme.css"> -->
+
+  <!-- JavaScript Files -->
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> -->
+  <script src="../_global/libs/jquery/jquery.min.js" type="text/javascript"></script> 
+  <script src="../_global/libs/jquery/jquery-validation.js" type="text/javascript"></script>   
+  <script src="../_global/libs/jquery/jquery-ui.js" type="text/javascript"></script> <!-- jQuery UI -->
+  <script src="../_global/libs/bootstrap/bootstrap.min.js" type="text/javascript"></script> <!-- Bootstrap JS -->
+  <script src="../_global/libs/underscore/underscore.js" type="text/javascript"></script> <!-- Underscore JS -->
+  <script src="../_global/libs/jquery/jquery_modal.js" type="text/javascript"></script>
+  <script src="../_global/global_exp1.js" type="text/javascript"></script>
+  <script src="../_global/properties.js" type="text/javascript"></script> 
+  
+  <!-- Custom JavaScript -->
+  <!-- <script type="module" src="api.js" ></script> -->
+  <script src="scripts/registrationPage.js" ></script>
+</head>
+
+
+<style>
+.form-control{
+width:400px;
+}
+label{
+margin:0px;
+}
+.ui-dialog {
+    border: none !important; /* Remove outer border */
+	border-radius: 20px;
+	 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+}
+
+/* Remove borders from the header */
+.ui-dialog-titlebar {
+    border: none !important; /* Remove header border */
+}
+.ui-dialog-titlebar {
+    display: none; /* Remove the title bar */
+}
+
+/* Hide the close button */
+.ui-dialog-titlebar-close {
+    color: black; /* Optionally hide the close button */
+}
+.container {
+    position: relative; /* Position relative for the child */
+}
+
+.right-align {
+    position: absolute; /* Position absolute */
+    right: 0; /* Align to the right */
+}
+
+.hide{
+	display: none;
+} 
+
+</style>
+
+<body>
+    
+<div class="mainDiv">
+    <table width="100%">
+    	<tr>
+    		<td width="2.5%"><span class="material-icons backIcon" onclick="Back()">arrow_back</span></td>
+    		
+    		<td width="85%" class="text-center navTabs">
+    			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				  <li class="nav-item">
+				    <a class="nav-link active " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><strong>User Registration Form</strong></a>
+				  </li>
+				</ul>
+			</td>
+			
+    		<td width="2.5%" style="text-align:right !important;"><span class="material-icons refreshIcon" onclick="refresh()">refresh</span></td>
+    	</tr>
+	
+	
+		<tr>	
+			<td width="2.5%"></td>
+				
+				<td width="85%" class="">
+				<br>
+					<div class="ca shadow">
+					<div class="tab-content" id="myTabContent">
+					  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+					  <div class="container pt-4 pb-4">
+				        <div class="registration-form">
+				            <!-- <h2 class="text-center">Registration Form</h2> -->
+				            <form id="registrationForm" onsubmit="saveUserInfo(event)">
+								<div class="d-flex justify-content-center">
+									<div class="row ">
+						                <div class="col-md-6 form-group">
+						                    <label for="firstName">First Name <span style="color:red;">*</span></label>
+						                    <input type="text" class="form-control" id="firstName" name="firstName">
+						                </div>
+						                <div class="col-md-6 form-group">
+						                    <label for="lastName">Last Name <span style="color:red;">*</span></label>
+						                    <input type="text" class="form-control" id="lastName" name="lastName">
+						                </div>
+						            </div>
+						          </div>  
+						        <div class="d-flex justify-content-center">  
+						            <div class="row">
+						                <div class="col-md-6 form-group">
+						                    <label for="email">Email</label>
+						                    <input type="email" class="form-control" id="email" name="email">
+						                </div>
+						                <div class="col-md-6 form-group">
+						                    <label for="phone">Phone Number</label>
+						                    <input type="tel" class="form-control" id="phone" name="phone">
+						                </div>
+						            </div>
+						       </div> 
+						        <div class="d-flex justify-content-center">   
+						            <div class="row">
+						                <div class="col-md-6 form-group">
+						                    <label for="country">Country</label>
+						                    <input type="text" class="form-control" id="country" name="country">
+						                </div>
+						                <div class="col-md-6 form-group">
+						                    <label for="state">State</label>
+						                    <input type="text" class="form-control" id="state" name="state">
+						                </div>
+						            </div>
+						        </div> 
+						        <div class="d-flex justify-content-center">   
+						            <div class="row">
+						                <div class="col-md-6 form-group">
+						                    <label for="city">City</label>
+						                    <input type="text" class="form-control" id="city" name="city">
+						                </div>
+						                <div class="col-md-6 form-group">
+						                    <label for="zip">Zip Code</label>
+						                    <input type="text" class="form-control" id="zip" name="zip">
+						                </div>
+						            </div>
+								</div>		                
+						        <div class="d-flex justify-content-center">  
+						        	<div class="row">
+										<div class="col-md-6 form-group">
+									    	<label for="username">Username <span style="color:red;">*</span></label>
+									    	<input type="text" class="form-control" id="regiusername" name="regiusername" required>
+									    </div>
+										<div class="col-md-6 form-group">
+									    	<label for="password">Password <span style="color:red;">*</span></label>
+											<input type="password" class="form-control" id="regipassword" name="regipassword" required>
+										</div>
+									</div> 
+								</div>	
+							
+								<div class="d-flex justify-content-center pt-2">
+									<div class="row">
+										<input type="submit" class="btn btn-primary btn-block col-md-12" style="width:300px; border-radius:4px;" value="Register" />
+									</div>
+								</div>
+							
+							
+							</form> 
+				            <div class="text-center pt-3">
+				                Already a member? <span style="color:blue; cursor:pointer;" onclick="openLoginPopup()">Login Here</span>
+				            </div>
+				        </div>
+				    </div>
+									  
+					  </div>
+					  
+					  
+					  
+					</div>	
+					</div>
+				</td>
+				
+			<td width="2.5%"></td>
+		</tr>
+	</table>
+</div>
+
+
+  <!-- ********** USER REGISTRATION **********-->
+  
+		<div id="loginMenu" class="loginMenu" >
+
+		    <div class="login-form">
+			  	
+			  	<div class="closebtn bg-success">
+				    <div class="right-align"><span id="menubtn" class="material-icons" onclick="closeLoginPopup()" style="margin-right: 10px;">close</span></div>
+				</div>
+		        
+		        <form id="loginForm">
+		            <div class="form-group pt-4">
+		                <label for="username" style="margin:0px;">Username <span style="color:red;">*</span></label>
+		                <input type="text" id="username" class="form-control" style="width:361px;" required>
+		            </div>
+		            <div class="form-group">
+		                <label for="password" style="margin:0px;">Password <span style="color:red;">*</span></label>
+		                <input type="password" id="password" class="form-control" style="width:361px;" required>
+		            </div>
+		           <div class="pt-2">
+		            <input type="submit" class="btn btn-primary btn-block" value="Login" onclick="userLogin(event)" />
+		        	</div> 
+		        </form>
+		       <!--  <div class="text-center pt-3">Not a member? <a href="_webpages/registrationPage.html" style="color:blue;cursor:pointer;" >Register Here</a></div> -->
+		    </div>
+
+		</div>
+
+
+
+
+  </body>
+  <script>
+  function Back(){
+	  window.location = "../index.html"
+  }
+  </script>
+
+  </html>

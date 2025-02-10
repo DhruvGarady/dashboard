@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="_global/css/images/favicon.png">
+  
+  <!-- CSS Files -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../_global/libs/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="../_global/css/style_et_1.css">
+  <link rel="stylesheet" href="../_global/libs/jquery/jquery-ui.css">
+
+  <!-- JavaScript Files -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <!-- <script src="_global/libs/jquery/jquery.min.js" type="text/javascript"></script> jQuery must load first -->
+  <script src="../_global/libs/jquery/jquery-ui.js" type="text/javascript"></script> <!-- jQuery UI -->
+  <script src="../_global/libs/bootstrap/bootstrap.min.js" type="text/javascript"></script> <!-- Bootstrap JS -->
+  <script src="../_global/libs/underscore/underscore.js" type="text/javascript"></script> <!-- Underscore JS -->
+  <script src="../_global/global_exp1.js" type="text/javascript"></script> 
+  <script src="../_global/inqpages.js" type="text/javascript"></script> 
+  
+  <!-- Custom JavaScript -->
+  <!-- <script type="module" src="api.js" ></script> -->
+  <script src="../_scripts/index.js" ></script>
+</head>
+
+
+<style>
+
+</style>
+
+<body>
+    
+<div class="mainDiv">
+    <table width="100%">
+    	<tr>
+    		<td width="2.5%"><span class="material-icons backIcon" onclick="inqBack()">arrow_back</span></td>
+    		
+    		<td width="35%" class="text-center navTabs">
+    			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				  <li class="nav-item">
+				    <a class="nav-link active " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+				  </li>
+				</ul>
+			</td>
+			
+			<td width="2%"></td>
+			
+			<td width="35%" class="text-center navTabs">
+				<ul class="nav nav-tabs justify-content-end" id="myTab" role="tablist">
+				  <li class="nav-item">
+				    <a class="nav-link active " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+				  </li>
+				</ul>
+			</td>
+    		
+    		<td width="2.5%" style="text-align:right !important;"><span class="material-icons refreshIcon" onclick="refresh()">refresh</span></td>
+    	</tr>
+	
+	
+		<tr>	
+			<td width="2.5%"></td>
+				
+				<td width="35%" class="">
+				<br>
+					<div class="ca shadow">
+					Computation of Total Income of an Individual
+					<form id="userForm">
+					<div class="tab-content" id="myTabContent">
+					  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
+					  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
+					  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
+					</div>	
+					</form>
+					</div>
+				</td>
+				
+				
+				<td width="2%"></td>
+				
+				
+				<td width="35%" class="">
+				<br>
+					<div class="ca shadow">
+					Computation of Total Income of an Individual
+					<form id="userForm">
+					<div class="tab-content" id="myTabContent">
+					  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"></div>
+					  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
+					  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
+					</div>	
+					</form>
+					</div>
+				</td>
+			
+			<td width="2.5%"></td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+
+
+
+  </body>
+
+  </html>

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expense Tracker</title>
+  <link rel="shortcut icon" href="_global/css/images/favicon.png">
+  
+
+  
+  <!-- CSS Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="_global/libs/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="_global/css/style_et_1.css">
+   <link rel="stylesheet" href="_global/libs/jquery/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- <link rel="stylesheet" href="_global/libs/jquery/theme.css"> -->
+
+  <!-- JavaScript Files -->
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> -->
+  <script src="_global/libs/jquery/jquery.min.js" type="text/javascript"></script> 
+  <script src="_global/libs/jquery/jquery-validation.js" type="text/javascript"></script>   
+  <script src="_global/libs/jquery/jquery-ui.js" type="text/javascript"></script> <!-- jQuery UI -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="_global/libs/bootstrap/bootstrap.min.js" type="text/javascript"></script> <!-- Bootstrap JS -->
+  <script src="_global/libs/underscore/underscore.js" type="text/javascript"></script> <!-- Underscore JS -->
+  <script src="_global/libs/jquery/jquery_modal.js" type="text/javascript"></script>
+  <script src="_global/global_exp1.js" type="text/javascript"></script>
+  <script src="_global/properties.js" type="text/javascript"></script> 
+
+  <!-- Custom JavaScript -->
+  <!-- <script type="module" src="api.js" ></script> -->
+  <script src="_scripts/index.js" ></script>
+</head>
+
+
+<style>
+
+.ui-dialog {
+    border: none !important; /* Remove outer border */
+	border-radius: 20px;
+	 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
+}
+
+/* Remove borders from the header */
+.ui-dialog-titlebar {
+    border: none !important; /* Remove header border */
+}
+.ui-dialog-titlebar {
+    display: none; /* Remove the title bar */
+}
+
+/* Hide the close button */
+.ui-dialog-titlebar-close {
+    color: black; /* Optionally hide the close button */
+}
+.container {
+    position: relative; /* Position relative for the child */
+}
+
+.right-align {
+    position: absolute; /* Position absolute */
+    right: 0; /* Align to the right */
+}
+
+.hide{
+	display: none;
+} 
+
+/* LOGIN FORM */
+
+#loginMenu {
+    overflow: hidden; /* Hide scrollbar by default */
+    overflow-y: scroll; /* Allow vertical scrolling */
+    -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar in Firefox */
+}
+
+#loginMenu::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
+}
+
+.closebtn {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensures it stays on top of other content */
+    padding: 0px; /* Optional: Adjust padding for styling */
+}
+
+        .dropdown-toggle {
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center items vertically */
+        }
+        #LoginName {
+            margin-left: 8px; /* Space between the icon and text */
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+
+</style>
+
+  <body>
+    
+  <!-- ********** header **********-->
+    <header>
+      <table width="100%" height="100%" class="mainHeader shadow-sm">
+        <tr>
+          <td width="1%"></td>
+          <td width="90%" style="vertical-align: top;"><span id="menubtn" class="material-icons mainIcon" onclick="openMenu()">menu</span></td>
+          
+          <td width="10%">
+    <div class="container">
+        <div class="dropleft show loginDropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span id="menubtn" class="material-icons loginIcon" >account_circle</span>
+                <div id="LoginName">Guest</div>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="_webpages/settings.html">Settings</a>
+                <a class="dropdown-item logout" onClick="userLogout()">Logout</a>
+                <a class="dropdown-item login" onclick="openLoginPopup()">Login</a>
+            </div>
+        </div>
+    </div>
+          
+          </td>
+          
+          <!-- td onclick="openLoginPopup()"><span id="menubtn" class="material-icons loginIcon">account_circle</span></td> -->
+        </tr>
+      </table> 
+    </header>    
+  
+  
+  <!-- ********** USER REGISTRATION **********-->
+  
+		<div id="loginMenu" class="loginMenu" >
+
+		    <div class="login-form">
+			  	
+			  	<div class="closebtn bg-success">
+				    <div class="right-align"><span id="menubtn" class="material-icons" onclick="closeLoginPopup()">close</span></div>
+				</div>
+		        
+		        <form id="loginForm">
+		            <div class="form-group pt-4">
+		                <label for="username" style="margin:0px;">Username <span style="color:red;">*</span></label>
+		                <input type="text" id="username" name="username" class="form-control" required>
+		            </div>
+		            <div class="form-group">
+		                <label for="password" style="margin:0px;">Password <span style="color:red;">*</span></label>
+		                <input type="password" id="password" name="password" class="form-control" required>
+		            </div>
+		           <div class="pt-2">
+		            <input type="submit" class="btn btn-primary btn-block" value="Login" onclick="userLogin(event)" />
+		        	</div> 
+		        </form>
+		        <div class="text-center pt-3">Not a member? <a href="_webpages/registrationPage.html" style="color:blue;cursor:pointer;" >Register Here</a></div>
+		    </div>
+
+		</div>
+
+
+<div class="wrapper hide">
+    <div class="loader hide"></div>
+</div>
+
+
+  <!-- ********** Menu **********-->
+  <div id="userMenu" class="userMenu shadow-sm" >
+          
+    <table width="100%">
+            <tr>
+               <td style="width:97.5%;"></td>
+
+               <td class="text-center">
+                <span class="material-icons mt-2" style="font-size: 25px !important;" onclick="closeMenu()">keyboard_arrow_up</span>
+               </td> 
+            </tr>
+    
+    </table>
+    
+    <div class="topnav">
+    	
+    	<table class="topnavTable">
+			<tr> 
+				<td>
+					<table class="topnavItemTable" onclick="income()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">account_balance</span></td>
+							<td class="topnavCell">INCOME</td>
+						</tr>
+					</table>
+				</td>
+				
+				<td>
+					<table class="topnavItemTable" onclick="emi()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">calendar_month</span></td>
+							<td class="topnavCell">Equated Monthly Installment</td>
+						</tr>
+					</table>
+				</td>
+				
+				<td>
+					<table class="topnavItemTable" onclick="payments()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">payments</span></td>
+							<td class="topnavCell">ANNUAL PAYMENTS</td>
+						</tr>
+					</table>
+				</td>
+				
+				<td>
+					<table class="topnavItemTable" onclick="monthlyPayments()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">shopping_bag</span></td>
+							<td class="topnavCell">MONTHLY EXPENDITURE</td>
+						</tr>
+					</table>
+				</td>
+
+				<td>
+					<table class="topnavItemTable" onclick="savings()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">savings</span></td>
+							<td class="topnavCell">SAVINGS</td>
+						</tr>
+					</table>
+				</td>				
+
+				<td>
+					<table class="topnavItemTable" onclick="dasboard()">
+						<tr>
+							<td class="topnavIcon"><span class="material-icons">grid_view</span></td>
+							<td class="topnavCell">DASHBOARD</td>
+						</tr>
+					</table>
+				</td>
+
+    		</tr>
+    	</table>
+
+    </div>
+  
+  </div>
+
+
+     <!-- ********** Content **********--> 
+    <div class="mainDiv">
+      	<iframe id="myIframe" class="mainFrame" src="_webpages/landingPage.html"  allowfullscreen></iframe>
+    </div>
+  
+
+
+
+
+  </body>
+
+  </html>
