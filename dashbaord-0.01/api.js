@@ -12,19 +12,21 @@ app.use(express.json())
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(session({
-    secret: 'aL0ngRand0mStr1ngTh4tIsDiff1cultToGu3ss',  // Use a secure key for production
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }  // Set to `true` if using HTTPS
-}));
+// app.use(session({
+    // secret: 'aL0ngRand0mStr1ngTh4tIsDiff1cultToGu3ss',  // Use a secure key for production
+    // resave: false,
+    // saveUninitialized: false,
+    // cookie: { secure: false }  // Set to `true` if using HTTPS
+// }));
+
+
 
 // FOR LOCAL
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "admin@123",
-    database: "expense_tracker_local",
+    database: "dashboard",
     port: 3306
 })
 
@@ -40,82 +42,157 @@ const con = mysql.createConnection({
 
 
 
-
-con.connect((err) => {
-    if(err){
-        console.log(err)
-    }else{
-        console.log("connected!!")
-    }
-})
-
-
 //----------------------------------------------------USER TABEL------------------------------------------------
 
-app.get('/user/data/:id',(req,res) => {
-    const id=req.params.id;
-
-
- con.query('SELECT * FROM user WHERE usr_id = ?', 
- [id], (err, result) => {
-        if(err){
-            console.log(err)
-        }else{
-			res.json(result);
-        }
-    })
-})
-
-
-
-app.get('/user/:id',(req,res) => {
-    const id=req.params.id;
-
-
- con.query('SELECT `FIRST_NAME`, `LAST_NAME`, `EMAIL`, `USERNAME`, `PHONE_NUMBER`, `state`, `country`, `zip` FROM user WHERE usr_id = ?', 
- [id], (err, result) => {
-        if(err){
-            console.log(err)
-        }else{
-			res.json(result);
-        }
-    })
-})
-
-
-
-
+//----------------------adding a user ---------------------
 const saltRounds = 10;
 
-app.post('/user/add',(req,res) => {
-    //const usr_id=req.body.usr_id;
-    const FIRST_NAME=req.body.FIRST_NAME;
-    const LAST_NAME=req.body.LAST_NAME;
-    const EMAIL=req.body.EMAIL;
-    const USERNAME=req.body.USERNAME;
-    const PASSWORD=req.body.PASSWORD;
-	const PHONE_NUMBER=req.body.PHONE_NUMBER;
-	const state=req.body.state;	
-	const country=req.body.country;
-	const zip=req.body.zip;
-	
-	// Hash the password before storing it
-	bcrypt.hash(PASSWORD, saltRounds, (err, hashedPassword) => {
-	    if (err) {
-	        console.error(err);
-	        return res.status(500).send("Error hashing password");
-	    }
+app.post('/user/addDOCuser', (req, res) => {
+    const {
+		created_by,
+		updated_by,
+        first_name,
+        last_name,
+        email,
+        username,
+        password_hash, // This should be hashed before storing
+        phone,
+        date_of_birth,
+        gender,
+        profile_picture,
+        is_active
+    } = req.body;
 
-    con.query('INSERT INTO user (`FIRST_NAME`, `LAST_NAME`, `EMAIL`, `USERNAME`,`PASSWORD`,`PHONE_NUMBER`,`state`,`country`,`zip`) VALUES (?,?,?,?,?,?,?,?,?)',
-	[FIRST_NAME,LAST_NAME,EMAIL,USERNAME,hashedPassword,state,PHONE_NUMBER,country,zip],(err,result) => {
+    // Hash the password before storing it
+    bcrypt.hash(password_hash, saltRounds, (err, hashedPassword) => { // Use password_hash from req.body
+        if (err) {
+            console.error(err);
+            return res.status(500).send("Error hashing password");
+        }
+
+        con.query(
+            'INSERT INTO doc_users (`created_by`,`updated_by`,`first_name`, `last_name`, `email`, `username`, `password_hash`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+            [created_by,updated_by,first_name, last_name, email, username, hashedPassword, phone, date_of_birth, gender, profile_picture, is_active], // Use hashedPassword
+            (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send("Database error");
+                } else {
+                    res.send("POSTED");
+                }
+            }
+        );
+    });
+});
+
+
+//-----------------user login------------------
+
+app.post('/user/login', (req, res) => {
+    const { USERNAME, PASSWORD } = req.body;
+
+    // Fetch user from database
+    con.query(
+        'SELECT username, id, password_hash FROM doc_users WHERE is_active = "Y" AND username = ?', 
+        [USERNAME], 
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Error on the server." });
+            }
+
+            if (results.length === 0) {
+                return res.status(401).json({ message: "Username or password is incorrect." });
+            }
+
+            const hashedPassword = results[0].password_hash;
+            const userId = results[0].id; // Change this if your user ID column is different
+
+            // Compare hashed password
+            bcrypt.compare(PASSWORD, hashedPassword, (err, isMatch) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: "Error while checking password." });
+                }
+
+                if (!isMatch) {
+                    return res.status(401).json({ message: "Username or password is incorrect." });
+                }
+
+                // Set session variables
+                req.session.username = USERNAME;
+                req.session.userId = userId;
+
+                res.json({ user_id: userId, message: "Login successful" });
+            });
+        }
+    );
+});
+
+//--------------------get user by Id-------------------
+
+app.get('/user/getById/:id',(req,res) => {
+    const id=req.params.id;
+
+
+ con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active` FROM doc_users WHERE is_active = "Y" AND id = ?', 
+ [id], (err, result) => {
         if(err){
             console.log(err)
         }else{
-            res.send("POSTED")
+			res.json(result);
         }
     })
-  })
 })
+
+//--------------------get users-------------------
+
+
+app.get('/user/getUsers',(req,res) => {
+    const id=req.params.id;
+
+
+ con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active` FROM doc_users WHERE is_active = "Y"', 
+ [id], (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
+
+
+//---------------------delete users--------------------
+
+app.put('/user/deleteUserById/:id', (req, res) => {
+    const id = req.params.id; // Get user ID from the URL
+
+    if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
+
+    con.query(
+        'UPDATE doc_users SET is_active = "N" WHERE id = ?', 
+        [id], 
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: "Error updating user" });
+            }
+            
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            res.json({ message: "User deactivated successfully" });
+        }
+    );
+});
+
+
+
 
 app.put('/update/:id', (req, res) => {
     const id = req.params.id;
@@ -159,45 +236,7 @@ app.put('/update/:id', (req, res) => {
     });
 });
 
-//--------------------------------- USER LOGIN------------------------------------
 
-app.post('/user/login', (req, res) => {
-    const USERNAME = req.body.USERNAME;
-    const PASSWORD = req.body.PASSWORD;
-
-    con.query('SELECT USERNAME, usr_id, PASSWORD FROM user WHERE USERNAME = ?', [USERNAME], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Error on the server.");
-        }
-
-        if (results.length === 0) {
-            return res.status(401).send("Username or password is incorrect.");
-        }
-
-        const hashedPassword = results[0].PASSWORD;
-        const userId = results[0].usr_id;  // Assuming `USER_ID` is the column for the user ID
-
-        bcrypt.compare(PASSWORD, hashedPassword, (err, isMatch) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Error while checking password.");
-				//return res.json({ message: "An error occurred. Please try again later." });
-			}
-
-            if (isMatch) {
-                // Set session variables
-                req.session.username = USERNAME;
-                req.session.userId = userId;
-
-				res.send(JSON.stringify(userId));
-            } else {
-                res.status(401).send("Username or password is incorrect.");
-				//res.json({ message: "Username or password is incorrect." });
-			}
-        });
-    });
-});
 
 
 
@@ -356,7 +395,7 @@ app.get('/income/groupBy/incomeType/:id',(req,res) => {
 
 
 
-//--------------------------------------------------
+//--------------------------- test --------------------------
 
 app.get('/', (req, res) => {
     res.send("Server is working");
@@ -370,3 +409,13 @@ app.listen(3002,(err) => {
         console.log("port 3002")
     }
 })
+
+
+con.connect((err) => {
+    if(err){
+        console.log(err)
+    }else{
+        console.log("connected!!")
+    }
+})
+//---------------------------test End---------------------------
