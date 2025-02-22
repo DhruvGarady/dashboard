@@ -12,13 +12,20 @@ app.use(express.json())
 app.use(cors());
 app.use(bodyParser.json());
 
-// app.use(session({
-    // secret: 'aL0ngRand0mStr1ngTh4tIsDiff1cultToGu3ss',  // Use a secure key for production
-    // resave: false,
-    // saveUninitialized: false,
-    // cookie: { secure: false }  // Set to `true` if using HTTPS
-// }));
+ app.use(session({
+     secret: 'aL0ngRand0mStr1ngTh4tIsDiff1cultToGu3ss',  // Use a secure key for production
+     resave: false,
+     saveUninitialized: false,
+     cookie: { secure: false }  // Set to `true` if using HTTPS
+ }));
 
+
+/*app.use(session({
+    secret: 'admin@123', // Change this to a strong secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }  // set secure: true if you're using https
+}));*/
 
 
 // FOR LOCAL
@@ -89,12 +96,12 @@ app.post('/user/addDOCuser', (req, res) => {
 //-----------------user login------------------
 
 app.post('/user/login', (req, res) => {
-    const { USERNAME, PASSWORD } = req.body;
+    const { username, password_hash } = req.body;
 
-    // Fetch user from database
+    // Fetch user from the database
     con.query(
         'SELECT username, id, password_hash FROM doc_users WHERE is_active = "Y" AND username = ?', 
-        [USERNAME], 
+        [username], 
         (err, results) => {
             if (err) {
                 console.error(err);
@@ -106,10 +113,11 @@ app.post('/user/login', (req, res) => {
             }
 
             const hashedPassword = results[0].password_hash;
-            const userId = results[0].id; // Change this if your user ID column is different
+            const userId = results[0].id;
+            const username = results[0].username; // This is the username from the database
 
             // Compare hashed password
-            bcrypt.compare(PASSWORD, hashedPassword, (err, isMatch) => {
+            bcrypt.compare(password_hash, hashedPassword, (err, isMatch) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).json({ message: "Error while checking password." });
@@ -119,15 +127,16 @@ app.post('/user/login', (req, res) => {
                     return res.status(401).json({ message: "Username or password is incorrect." });
                 }
 
-                // Set session variables
-                req.session.username = USERNAME;
-                req.session.userId = userId;
+                // Set session variables with the correct database username
+                req.session.username = username; // Set session username to the username from the DB
+                req.session.userId = userId; // Set session userId to the userId from the DB
 
-                res.json({ user_id: userId, message: "Login successful" });
+                res.json({ user_id: userId, username: username });
             });
         }
     );
 });
+
 
 //--------------------get user by Id-------------------
 

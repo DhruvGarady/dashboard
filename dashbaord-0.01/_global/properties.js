@@ -4,8 +4,8 @@ var request_url = "http://localhost:3002";
 
 $(function(){
 	
-	strURL = request_url + '/income_types/data';
+	/*strURL = request_url + '/income_types/data';
 	getAPIdata(strURL,function(usrData){	
 		sessionStorage.setItem("INCOME_TYPES",JSON.stringify(usrData))		
-	});
+	});*/
 })
