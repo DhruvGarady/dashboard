@@ -85,13 +85,12 @@ function onUserLoginSuccess(response) {
 		alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
 		sessionStorage.setItem("USERNAME",response.username)
-		location.href = "_.webpages/home.html"
+		location.href = "_webpages/home.html"
 		
 }
 
 function onUserLoginErr(){
-	alert("Unauthorized")
-	sessionStorage.removeItem("USER_ID")
+	alert("Unauthorized.")
 	$(".loader").addClass("hide");
 	$(".wrapper").addClass("hide");
 }
