@@ -51,12 +51,25 @@ body{
 					  <div class="container" style="padding:0px; width:1190px !important;">
 						<div class="card ca shadow" style="height:560px !important;">
 							  <div class="card-header">
-							  <div class="d-flex justify-content-between pb-2">
-							  
-											<input type='button' class="btn btn-danger btn-block col-md-3 mt-2" style="width:180px; border-radius:4px;" onclick="deleteAll()" value="Delete All"> 
-											<input type='button' class="btn btn-primary btn-block col-md-3 " style="width:180px; border-radius:4px;" onclick="createIncomeChart()" value="Crate Chart">
+							  <table width = "100%">
+							  		<tr>
+							  	
+							  	<td width = "60%">
+									<input type='button' class="btn btn-danger btn-block col-md-3 mt-2" style="width:180px; border-radius:4px;" onclick="deleteAll()" value="Delete All"> 
+								</td>
 								
-										</div>
+								<td width = "20%">	
+									<input type='file' class="btn btn-primary" id="fileInput" style="border-radius:4px;">
+								</td>		
+								
+								<td width="2%"></td>
+								
+								<td>
+									<input type='button' class="btn btn-primary" style="border-radius:4px; width :100%;" onclick="upload()" value="Upload">
+								</td>
+								
+									</tr>
+								</table>
 					
 							  </div>
 							 <div class="card-body" style="max-height:500px; overflow-y: auto;padding:0px;">
@@ -65,7 +78,8 @@ body{
 									<tr>
 									  <th>SI</th>
 									  <th>Date</th>
-									  <th>Income Type</th>
+									  <th>Expense</th>
+									  <th>Type (Credit/Debit)</th>
 									  <th>Amount (&#8377;)</th>
 									  <th>Remarks</th>
 									  <th>Del</th>
