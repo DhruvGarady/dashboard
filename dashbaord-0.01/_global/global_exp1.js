@@ -82,10 +82,11 @@ if(id != null && id != "" && id != undefined){
 
 function onUserLoginSuccess(response) {
 	
-	alert("Login Successful.")
+		alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
 		sessionStorage.setItem("USERNAME",response.username)
-    // Redirect or perform other actions on successful login
+		location.href = "_.webpages/home.html"
+		
 }
 
 function onUserLoginErr(){
