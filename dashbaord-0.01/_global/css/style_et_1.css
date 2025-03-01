@@ -23,4 +23,21 @@
   100% { transform: rotate(360deg); }
 } 
   
-  
+.row{
+	height: 91vh;
+}
+
+.container2{
+	margin:0px;
+}
+html, body {
+    overflow: hidden;
+}
+
+.navbar{
+	background: #383d41;
+	padding:3px;
+}
+#userName{
+	color:white;
+}

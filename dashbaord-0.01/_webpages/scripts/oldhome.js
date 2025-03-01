@@ -13,16 +13,6 @@ $(document).ready(function() {
 	});	*/
 
  	
-isUserLoggedIn()
-
-var userName = sessionStorage.getItem("USERNAME");
-
-if(userName != "" && userName != null && userName != undefined){
-	$("#userName").html(userName);
-}
-	
-	
-	
 	
 	$("#incomeForm").validate({
 	    rules: {
@@ -45,9 +35,9 @@ if(userName != "" && userName != null && userName != undefined){
 	//income types data
 	incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
 	var myTemplate = $("#incomeTypeTmpl").html();	 
-	//const template = _.template(myTemplate);
-	//const renderedHtml = template(incomeTypes);
-	//$('#incomeType').append(renderedHtml);
+	const template = _.template(myTemplate);
+	const renderedHtml = template(incomeTypes);
+	$('#incomeType').append(renderedHtml);
 	
 	
 

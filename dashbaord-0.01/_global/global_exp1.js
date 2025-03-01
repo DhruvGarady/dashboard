@@ -3,11 +3,8 @@ var menuOpen = false;
 var myPage;
 $(function() {
 	
-	$('.logout').hide();
-	$('.login').hide();
-	
-	var usrName = sessionStorage.getItem("USERNAME");
-	if(usrName == "" || usrName== null || usrName == undefined){
+	/*var usrName = sessionStorage.getItem("USERNAME");
+	if(usrName != "" && usrName != null && usrName != undefined){
 		sessionStorage.setItem("USERNAME","Guest");
 	}
 	usrName = sessionStorage.getItem("USERNAME");
@@ -24,6 +21,7 @@ $(function() {
 	if(sessionStorage.getItem("USER_ID") != null && sessionStorage.getItem("USER_ID") != "" && sessionStorage.getItem("USER_ID") != undefined){
 		$('.logout').show();
 	}
+*/
 
 });
 
@@ -42,51 +40,62 @@ function closeLoginPopup(){
 	$("#loginMenu").dialog("close")
 }*/
 
+function isUserLoggedIn(){
+	var userId = sessionStorage.getItem("USER_ID");
+	var userName = sessionStorage.getItem("USERNAME");
+	
+	if(userName == null || userName == "" || userName == undefined){
+		location.href = "../index.html";		
+	}
+	if(userId == null || userId == "" || userId == undefined){
+		location.href = "../index.html";
+	}	
+	
+}
+
 
 
 function userLogin() {
+	var id = sessionStorage.getItem("USER_ID")
+	if(id != null && id != "" && id != undefined){
+			alert("User already logged in!");
+			location.href = "_webpages/home.html"
+		}else{
 	
-var id = sessionStorage.getItem("USER_ID")
-if(id != null && id != "" && id != undefined){
-		alert("User already logged in!")
-	}else{
-
-			var jsonData ={
-		        username: $("#username").val(),
-		        password_hash: $("#password").val()
-		    }
-
-			
-		  postURL = request_url + "/user/login";
-			
-		    $.ajax({
-		        type: "POST",
-		        url: postURL,
-		        data: JSON.stringify(jsonData),
-		        contentType: "application/json",
-				/*beforeSend: function() {
-				  $(".wrapper").removeClass("hide");
-				  $(".loader").removeClass("hide");
-				},*/
-		        success: onUserLoginSuccess,
-		        error: onUserLoginErr,
+				var jsonData ={
+			        username: $("#username").val(),
+			        password_hash: $("#password").val()
+			    }
+	
 				
-				/*complete: function() {
-					$(".loader").addClass("hide");
-					$(".wrapper").addClass("hide");
-				}*/
-		    });
-	}
+			  postURL = request_url + "/user/login";
+				
+			    $.ajax({
+			        type: "POST",
+			        url: postURL,
+			        data: JSON.stringify(jsonData),
+			        contentType: "application/json",
+					/*beforeSend: function() {
+					  $(".wrapper").removeClass("hide");
+					  $(".loader").removeClass("hide");
+					},*/
+			        success: onUserLoginSuccess,
+			        error: onUserLoginErr,
+					
+					/*complete: function() {
+						$(".loader").addClass("hide");
+						$(".wrapper").addClass("hide");
+					}*/
+			    });
+		}
 
 }
 
 function onUserLoginSuccess(response) {
-	
 		alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
 		sessionStorage.setItem("USERNAME",response.username)
 		location.href = "_webpages/home.html"
-		
 }
 
 function onUserLoginErr(){
@@ -94,12 +103,12 @@ function onUserLoginErr(){
 	$(".loader").addClass("hide");
 	$(".wrapper").addClass("hide");
 }
-
+/*
 function userLogout(){
 	sessionStorage.removeItem("USER_ID");
 	sessionStorage.setItem("USERNAME","Guest");
 	location.reload();
-} 
+} */
 
 //-------------------------------LOGIN END----------------------------------------
 
