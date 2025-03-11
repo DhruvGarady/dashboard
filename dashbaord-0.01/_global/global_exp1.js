@@ -1,8 +1,14 @@
 var userName;
 var menuOpen = false;
 var myPage;
+var parentFeatures;
 $(function() {
+
 	
+	isUserLoggedIn();	
+	buildMenu();
+	
+
 	/*var usrName = sessionStorage.getItem("USERNAME");
 	if(usrName != "" && usrName != null && usrName != undefined){
 		sessionStorage.setItem("USERNAME","Guest");
@@ -126,4 +132,72 @@ function getAPIdata(strURL,callback){
 		    console.log("Error fetching data: ", textStatus, errorThrown);
 		}
 	 });
+}
+
+function buildMenu(){
+	
+	strURL = request_url + "/feature/getFeature";
+	
+	var menuTemplate = $("#menuTmpl").html();
+
+	getAPIdata(strURL,function(data){	
+		sessionStorage.setItem('FEATURES',JSON.stringify(data))
+	});
+	
+	var features = JSON.parse(sessionStorage.getItem("FEATURES"))
+	
+	_.each(features, function(item){
+		if(item.parent_feature_id != null && item.parent_feature_id != undefined && item.parent_feature_id != ""){
+			item.isParentFeature = 'N';	
+		}else{
+			item.isParentFeature = 'Y';
+			item.childFeatures = [];
+		}
+	});
+	
+	childFeatures = _.reject(features, function(item){
+		return item.isParentFeature == 'Y';
+	})
+	
+	parentFeatures = _.reject(features, function(item){
+		return item.isParentFeature == 'N';
+	})
+	
+	_.each(parentFeatures, function(pitem){
+		_.each(childFeatures, function(citem){
+				if(pitem.id == citem.parent_feature_id){
+					pitem.childFeatures.push(citem)
+				}
+		})
+	})
+	
+	
+	/*features = _.groupBy(features, "id")
+	
+	features = _.map(features, function(item) {
+	    return {
+	        id: item[0].id,
+	        feature_name: item[0].feature_name,
+			feature_description: item[0].feature_description,
+			display_sequence: item[0].display_sequence,
+			icon: item[0].icon,
+			
+	    };
+	});*/
+
+	$("#menuContainer").html(_.template(menuTemplate, parentFeatures));
+	$('#menuContainer').trigger("create");
+
+	console.log(JSON.stringify(parentFeatures)); 
+	
+}
+
+/*function capitalizeWords(str) {
+    return str.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+}*/
+
+function linkPage(url){
+	location.href = url;	
 }
