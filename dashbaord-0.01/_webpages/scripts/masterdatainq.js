@@ -54,11 +54,11 @@ if(userName != "" && userName != null && userName != undefined){
 	
 
 	//Templating the added data
-/*	strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
+	/*strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
 	var myTemplate = _.template($("#template").html());	 
-	var tableBody = $("#appendHere");
+	var tableBody = $("#appendHere");*/
 	
-	getAPIdata(strURL,function(usrData){	
+/*	getAPIdata(strURL,function(usrData){	
 		sessionStorage.setItem('INCOME_DASHDATA',JSON.stringify(usrData))
 		Data = usrData;
 		tableBody.append(myTemplate(Data));

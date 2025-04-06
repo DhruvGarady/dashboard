@@ -9,7 +9,7 @@
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 23px;
+    font-size: 20px;
     line-height: 1;
     letter-spacing: normal;
     text-transform: none;
@@ -50,16 +50,19 @@ html, body {
 }
 
 .navbar{
-	background: #383d41;
+	/* background: #383d41; */
+	background: #3675ff;
 	padding:3px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	/* margin-bottom:10px; */
 }
 #userName{
 	color:white;
 }
 /* -------------Menu--------------- */
-
+.mainNav{
+	padding-left: 5px !important;
+}
 
 #menuContainer {
     background: #383d41; /* Your preferred background color */
@@ -74,14 +77,14 @@ html, body {
     padding: 12px 10px;
     color: white;
     font-size: 16px;
-    font-weight: bold;
+    /* font-weight: bold; */
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
     transition: background 0.3s;
 }
 
-#menuContainer td:hover {
-    background: #16213e; 
+#menuContainer tr:hover {
+    background: #2e3236; 
 }
 /* Custom scrollbar for Chrome, Safari & Edge */
 
@@ -105,3 +108,27 @@ html, body {
 }
 
 /* -------------Menu--------------- */
+
+
+ /*------------- main Div -------------*/
+ 
+ .mainDiv{
+ 	padding : 0px !important; 
+ }
+ 
+ 
+ .mainTblHdr{
+  	/* font-weight: bold; */           
+  	font-size: 20px;
+  	padding: 10px;
+ }
+ 
+ 
+ .masterdataCard{
+padding-left: 3%;
+ }
+ 
+ .text-dark{
+ 	padding: 0px;
+ }
+ 

@@ -5,8 +5,8 @@ var parentFeatures;
 $(function() {
 
 	
-	isUserLoggedIn();	
-	buildMenu();
+	//isUserLoggedIn();	
+	//buildMenu();
 	
 
 	/*var usrName = sessionStorage.getItem("USERNAME");

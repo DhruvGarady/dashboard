@@ -29,6 +29,7 @@ app.use(bodyParser.json());
 
 
 // FOR LOCAL
+/*
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -36,16 +37,16 @@ const con = mysql.createConnection({
     database: "dashboard",
     port: 3306
 })
+*/
 
 
-
-//  const con = mysql.createConnection({
-//     host: "exp-tracker-db.cnicycuoaqou.eu-north-1.rds.amazonaws.com",
-//     user: "admin",
-//     password: "admin123",
-//     database: "expense_tracker_local",
-//     port: 3306
-// })
+  const con = mysql.createConnection({
+     host: "lms.cnicycuoaqou.eu-north-1.rds.amazonaws.com",
+     user: "admin",
+     password: "jeevanganesh",
+     database: "dashboard",
+     port: 3306
+ })
 
 
 
@@ -54,7 +55,7 @@ const con = mysql.createConnection({
 //----------------------adding a user ---------------------
 const saltRounds = 10;
 
-app.post('/user/addDOCuser', (req, res) => {
+/*app.post('/user/addDOCuser', (req, res) => {
     const {
 		created_by,
 		updated_by,
@@ -67,7 +68,35 @@ app.post('/user/addDOCuser', (req, res) => {
         date_of_birth,
         gender,
         profile_picture,
-        is_active
+        is_active,
+		user_type,
+		address,
+		nationality,
+		grade_level,
+		admission_date,
+		class_section,
+		course,
+		GPA,
+		attendance_percentage,
+		academic_status,
+		guardian_name,
+		guardian_phone,
+		guardian_email,
+		relationship,
+		courses_enrolled,
+		credits_earned,
+		semester,
+		tuition_status,
+		blood_type,
+		medical_conditions,
+		emergency_contact_name,
+		emergency_contact_phone,
+		disciplinary_record,
+		clubs_and_activities,
+		sports_participation,
+		volunteer_hours,
+		last_login,
+		account_status
     } = req.body;
 
     // Hash the password before storing it
@@ -78,8 +107,8 @@ app.post('/user/addDOCuser', (req, res) => {
         }
 
         con.query(
-            'INSERT INTO doc_users (`created_by`,`updated_by`,`first_name`, `last_name`, `email`, `username`, `password_hash`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-            [created_by,updated_by,first_name, last_name, email, username, hashedPassword, phone, date_of_birth, gender, profile_picture, is_active], // Use hashedPassword
+            'INSERT INTO doc_users (`created_by`,`updated_by`,`first_name`, `last_name`, `email`, `username`, `password_hash`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active`,`user_type`,`address`,`nationality`,`grade_level`, `admission_date`,`class_section` ,`course` ,`GPA` ,`attendance_percentage` ,`academic_status` ,`guardian_name` ,`guardian_phone` ,`guardian_email` ,`relationship`,`courses_enrolled` ,`credits_earned` ,`semester` ,`tuition_status` ,`blood_type` ,`medical_conditions` ,`emergency_contact_name` ,`emergency_contact_phone` ,`disciplinary_record` ,`clubs_and_activities` ,`sports_participation` ,`volunteer_hours` ,`last_login` ,`account_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [created_by,updated_by,first_name, last_name, email, username, hashedPassword, phone, date_of_birth, gender, profile_picture, is_active, user_type, address, nationality, grade_level, admission_date,class_section, course, GPA, attendance_percentage, academic_status, guardian_name, guardian_phone, guardian_email, relationship, courses_enrolled, credits_earned, semester, tuition_status, blood_type, medical_conditions, emergency_contact_name, emergency_contact_phone, disciplinary_record, clubs_and_activities, sports_participation, volunteer_hours, last_login, account_status], // Use hashedPassword
             (err, result) => {
                 if (err) {
                     console.error(err);
@@ -91,6 +120,99 @@ app.post('/user/addDOCuser', (req, res) => {
         );
     });
 });
+*/
+
+app.post('/user/addDOCuser', (req, res) => {
+    const {
+        created_by,
+        updated_by,
+        first_name,
+        last_name,
+        email,
+        username,
+        password_hash, // This should be hashed before storing
+        phone,
+        date_of_birth,
+        gender,
+        profile_picture,
+        is_active,
+        user_type,
+        address,
+        nationality,
+        grade_level,
+        admission_date,
+        class_section,
+        course,
+        GPA,
+        attendance_percentage,
+        academic_status,
+        guardian_name,
+        guardian_phone,
+        guardian_email,
+        relationship,
+        courses_enrolled,
+        credits_earned,
+        semester,
+        tuition_status,
+        blood_type,
+        medical_conditions,
+        emergency_contact_name,
+        emergency_contact_phone,
+        disciplinary_record,
+        clubs_and_activities,
+        sports_participation,
+        volunteer_hours,
+        last_login,
+        account_status
+    } = req.body;
+
+    // Check if required fields are provided
+    if (!password_hash) {
+        return res.status(400).send("Password is required");
+    }
+
+    // Hash the password before storing it
+    bcrypt.hash(password_hash, saltRounds, (err, hashedPassword) => {
+        if (err) {
+            console.error("Error hashing password:", err);
+            return res.status(500).send("Error hashing password");
+        }
+
+        const sql = `
+            INSERT INTO doc_users (
+                created_by, updated_by, first_name, last_name, email, username, password_hash, 
+                phone, date_of_birth, gender, profile_picture, is_active, user_type, address, 
+                nationality, grade_level, admission_date, class_section, course, GPA, 
+                attendance_percentage, academic_status, guardian_name, guardian_phone, 
+                guardian_email, relationship, courses_enrolled, credits_earned, semester, 
+                tuition_status, blood_type, medical_conditions, emergency_contact_name, 
+                emergency_contact_phone, disciplinary_record, clubs_and_activities, 
+                sports_participation, volunteer_hours, last_login, account_status
+            ) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [
+            created_by, updated_by, first_name, last_name, email, username, hashedPassword,
+            phone, date_of_birth, gender, profile_picture, is_active, user_type, address,
+            nationality, grade_level, admission_date, class_section, course, GPA,
+            attendance_percentage, academic_status, guardian_name, guardian_phone,
+            guardian_email, relationship, courses_enrolled, credits_earned, semester,
+            tuition_status, blood_type, medical_conditions, emergency_contact_name,
+            emergency_contact_phone, disciplinary_record, clubs_and_activities,
+            sports_participation, volunteer_hours, last_login, account_status
+        ];
+
+        con.query(sql, values, (err, result) => {
+            if (err) {
+                console.error("Database error:", err);
+                return res.status(500).send("Database error");
+            }
+            res.status(201).send({ message: "User added successfully", userId: result.insertId });
+        });
+    });
+});
+
 
 
 //-----------------user login------------------
@@ -157,11 +279,60 @@ app.get('/user/getById/:id',(req,res) => {
 //--------------------get users-------------------
 
 
+app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
+    const { user_type, class_section } = req.params;
+
+    let sql = `SELECT 	id, created_by, updated_by, first_name, last_name, email, phone, 
+		               date_of_birth, gender, profile_picture, is_active, user_type, address, 
+		               nationality, grade_level, admission_date, class_section, course, GPA, 
+		               attendance_percentage, academic_status, guardian_name, guardian_phone, 
+		               guardian_email, relationship, courses_enrolled, credits_earned, semester, 
+		               tuition_status, blood_type, medical_conditions, emergency_contact_name, 
+		               emergency_contact_phone, disciplinary_record, clubs_and_activities, 
+		               sports_participation, volunteer_hours, last_login, account_status 
+			FROM doc_users WHERE is_active = "Y"`;
+					   
+    const params = [];
+
+    if (user_type) {
+        sql += ` AND user_type = ?`;
+        params.push(user_type);
+    }
+
+    if (class_section) {
+        sql += ` AND class_section = ?`;
+        params.push(class_section);
+    }
+
+    con.query(sql, params, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+
+
+
+
 app.get('/user/getUsers',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active` FROM doc_users WHERE is_active = "Y"', 
+ con.query(	`SELECT id, created_by, updated_by, first_name, last_name, email, phone, 
+	               date_of_birth, gender, profile_picture, is_active, user_type, address, 
+	               nationality, grade_level, admission_date, class_section, course, GPA, 
+	               attendance_percentage, academic_status, guardian_name, guardian_phone, 
+	               guardian_email, relationship, courses_enrolled, credits_earned, semester, 
+	               tuition_status, blood_type, medical_conditions, emergency_contact_name, 
+	               emergency_contact_phone, disciplinary_record, clubs_and_activities, 
+	               sports_participation, volunteer_hours, last_login, account_status
+	        FROM doc_users 
+	        WHERE is_active = "Y"`, 
  [id], (err, result) => {
         if(err){
             console.log(err)
