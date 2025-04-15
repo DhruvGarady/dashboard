@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
   <title>LMS</title>
   <link rel="shortcut icon" href="../_global/css/images/images.png">
   
@@ -38,6 +39,7 @@ body{
     margin: 0; /* Ensure no default margin */
     height: 100%; /* Ensure the body takes full height of the screen */
 }
+
 </style>
 
 <body>
@@ -58,7 +60,6 @@ body{
 
 
   
-<div class="container2">
   <div class="row" >
     
     <div class="col-sm-2 ">
@@ -77,7 +78,7 @@ body{
              <table class="menuTable" id="menuTable" style="width:100%; overflow-y:auto;">
 				<tr class="menuTr" id="menuTr">
  					<td class="menuTd" id="menuTd" width="10%" onclick="linkPage('<%= item.feature_url %>')"><i class="material-icons"><%= item.icon %></i></td>
-                    <td class="menuTd" id="menuTd" width="90%" onclick="linkPage('<%= item.feature_url %>')"><%= (item.feature_name).toUpperCase() %></td>
+                    <td class="menuTd" id="menuTd" width="90%" onclick="linkPage('<%= item.feature_url %>')"><%= (item.feature_name) %></td>
                 </tr>
 
 				<% if(item.childFeatures != null && item.childFeatures != undefined && item.childFeatures != ""){%>
@@ -101,59 +102,108 @@ body{
     <div class="col-sm-10 mainDiv">
     
     
-		<table width="98%">
+ 
+ <div class="sectionDiv">   
+ 
+ 		<table width="98%">
 			<tr>
 				<td class="mainTblHdr">User Management:</td> 
 			</tr>
 		</table>
-    
-    
-		<table width="98%">
+ 
+		<table width="50%">
 	
 	<tr>
+		<td width="20%">	
+		<div class="">
+			<label class="form-group">User Type:</label>
+			<select id="userType" name="userType" style="width:100%">
+			  <option value="">Select</option>
+			  <option value="PRINCIPAL">PRINCIPAL</option>
+			  <option value="VP">VP</option>
+			  <option value="HOD">HOD</option>
+			  <option value="TEACHER">TEACHER</option>
+			  <option value="STAFF">STAFF</option>
+			  <option value="STUDENT">STUDENT</option>
+			</select>		  
+		  
+		</div>
+		</td>
 	
+		<td width="2%"></td>
 		
-	
+		<td width="20%">	
+		<div class="">
+			<label class="form-group">Section:</label>
+			<select id="Section" name="Section" style="width:100%">
+			  <option value="">Select</option>
+			  <option value="PRINCIPAL">PRINCIPAL</option>
+			  <option value="VP">VP</option>
+			  <option value="HOD">HOD</option>
+			  <option value="TEACHER">TEACHER</option>
+			  <option value="STAFF">STAFF</option>
+			  <option value="STUDENT">STUDENT</option>
+			</select>		  
+		  
+		</div>
+
+		</td>	
+			
+		<td width="2%"></td>
+		
+		<td width="20px" style="vertical-align:bottom;">	
+			<input type="button" value="Search" onclick="search()" class="search">	  
+
+		</td>			
 	
 	</tr>	
+		</table>    
+    
+    
+    </div>		
 		
 		
-		
-			<tr>
-	 
-	  <div id="listContainer" style="overflow-y:auto;">
-		<script type="text/template" id="menuTmpl">
+		<br>
+	
+
+ <div class="sectionDiv" style="height:75%;">   	 
+	  
+	  
+	  <div id="listContainer2" class="tempalte">
+		<script type="text/template" id="listTmpl">
+
+		<table style="width:100%;" class="dataTbl">
+			  <tr>
+				<th width="5%">Roll Number</th>
+				<th width="5%">First Name</th>
+				<th width="5%">Last Name</th>
+				<th width="5%">Class Section</th>
+				<th width="5%">Course</th>
+				<th width="5%">Attendace Percentage</th>
+				<th width="5%">Tuition Status</th>
+			  </tr>	
         
-	<%_.each(parentFeatures, function(item, index){ %>
-
-             <table class="menuTable" id="menuTable" style="width:100%; overflow-y:auto;">
-				<tr class="menuTr" id="menuTr">
- 					<td class="menuTd" id="menuTd" width="10%" onclick="linkPage('<%= item.feature_url %>')"><i class="material-icons"><%= item.icon %></i></td>
-                    <td class="menuTd" id="menuTd" width="90%" onclick="linkPage('<%= item.feature_url %>')"><%= (item.feature_name).toUpperCase() %></td>
-                </tr>
-
-				<% if(item.childFeatures != null && item.childFeatures != undefined && item.childFeatures != ""){%>
-					<%_.each(item.childFeatures, function(oitem, index){ %>
-					<tr class="menuTr" id="menuTr">
-						<td class="submenuTd" id="submenuTd" width="20%" onclick="linkPage('<%= oitem.feature_url %>')"></td>
-                    	<td class="submenuTd" id="submenuTd" width="80%" onclick="linkPage('<%= oitem.feature_url %>')"><%= oitem.feature_name %></td>
-					</tr>	       	
-				      <% }); %>	
-				<% }%>
-
-			</table>
+	<%
+_.each(usrData, function(item){ %>
+			<tr>
+				<td><%= item.roll_num %></td>
+				<td><%= item.first_name %></td>
+				<td><%= item.last_name %></td>
+				<td><%= item.class_section %></td>
+				<td><%= item.course %></td>
+				<td><%= item.attendance_percentage %></td>
+				<td><%= item.tuition_status %></td>
+			</tr>
        
 	<% }); %>
-       
+	</table>
     </script>
 	</div>				
 	
 	
-			</tr>
-		</table>    
     
     
-    </div>
+    </div>	
   
   
   </div>

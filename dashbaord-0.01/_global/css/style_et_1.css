@@ -27,6 +27,9 @@
     font-size: 0.9em; /* Adjust font size if needed */
 }
 
+.col-sm-2{
+	padding-right:0px;
+} 
 
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
@@ -47,6 +50,7 @@
 }
 html, body {
     overflow: hidden;
+    background-color:#fcfafa;
 }
 
 .navbar{
@@ -74,7 +78,7 @@ html, body {
 
 
 #menuContainer td {
-    padding: 12px 10px;
+    padding: 9px 6px;
     color: white;
     font-size: 16px;
     /* font-weight: bold; */
@@ -113,14 +117,16 @@ html, body {
  /*------------- main Div -------------*/
  
  .mainDiv{
- 	padding : 0px !important; 
+ 	padding :22px !important; 
  }
  
  
  .mainTblHdr{
   	/* font-weight: bold; */           
   	font-size: 20px;
-  	padding: 10px;
+  	padding-top: 0px;
+  	padding-bottom: 12px;
+  	
  }
  
  
@@ -131,4 +137,91 @@ padding-left: 3%;
  .text-dark{
  	padding: 0px;
  }
+ .form-group{
+ 	display: block; 
+ 	margin-bottom: 0.0rem;
+ }
+
+ 
+ select, input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #2c3e50;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 8px;
+}
+
+select option {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
+ 
+ 
+ .sectionDiv{
+ 	background-color:white;
+ 	padding:10px;
+ 	padding-bottom:20px;
+ 	padding-top:20px;
+ 	padding-left: 20px;
+	/* margin-left:10px; */
+ 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ 	width:99%;
+ }
+ 
+.search{
+ 	width:100px !important; 
+ 	text-align:center;
+ 	color: #fff;
+ 	border: none;
+ 	background-color: #1a73e8;
+}
+
+
+ .dataTbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* border: 1px solid #ccc; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-y:automatic;
+ /*  margin-bottom: 1.5rem; */
+}
+
+.dataTbl  th {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  text-align: left;
+ padding: 12px 15px; 
+  font-size: 14px;
+  border-bottom: 2px solid #34495e;
+}
+
+.dataTbl  td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  color: #333;
+  font-size: 14px;
+}
+
+ .dataTbl  tr:nth-child(even) {
+  background-color: #f9f9f9;
+} 
+
+/* Optional: Hover effect */
+.dataTbl tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.tempalte{
+	height:100%; 
+	width:99%;
+	border: 1px solid #ddd;
+}
  

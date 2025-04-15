@@ -4,7 +4,45 @@ var myPage;
 var parentFeatures;
 $(function() {
 
+	strURL = request_url + "/feature/getFeature";
 	
+	features = getAPIdata(strURL)
+
+/*	getAPIdata(strURL,function(data){	
+		sessionStorage.setItem('FEATURES',JSON.stringify(data))
+	});
+
+	var features = JSON.parse(sessionStorage.getItem("FEATURES"))*/
+
+	_.each(features, function(item){
+		if(item.parent_feature_id != null && item.parent_feature_id != undefined && item.parent_feature_id != ""){
+			item.isParentFeature = 'N';	
+		}else{
+			item.isParentFeature = 'Y';
+			item.childFeatures = [];
+		}
+	});
+
+	childFeatures = _.reject(features, function(item){
+		return item.isParentFeature == 'Y';
+	})
+
+	parentFeatures = _.reject(features, function(item){
+		return item.isParentFeature == 'N';
+	})
+
+	_.each(parentFeatures, function(pitem){
+		_.each(childFeatures, function(citem){
+				if(pitem.id == citem.parent_feature_id){
+					pitem.childFeatures.push(citem)
+				}
+		})
+	})
+
+	sessionStorage.setItem('FEATURES',JSON.stringify(parentFeatures))
+
+	
+		
 	//isUserLoggedIn();	
 	//buildMenu();
 	
@@ -119,58 +157,66 @@ function userLogout(){
 //-------------------------------LOGIN END----------------------------------------
 
 
-function getAPIdata(strURL,callback){
+function getAPIdata(strURL){
 	
-	$.ajax({
+return JSON.parse($.ajax({
+		global:false,
+		async:false,
 	    type: "GET",
 	    url: strURL,
 	    contentType: "application/json",
 		success: function(data) {
-		   callback(data);
+		   return data;
 		},
-		error: function(jqXHR, textStatus, errorThrown) {
-		    console.log("Error fetching data: ", textStatus, errorThrown);
-		}
-	 });
+		error: err
+	 }).responseText)
 }
 
-function buildMenu(){
-	
-	strURL = request_url + "/feature/getFeature";
-	
-	var menuTemplate = $("#menuTmpl").html();
 
-	getAPIdata(strURL,function(data){	
-		sessionStorage.setItem('FEATURES',JSON.stringify(data))
-	});
+function err(){
+	alert("System Error!")
+}
+
+
+function getJSONData(strURL) {
+  return $.ajax({
+    type: "GET",
+    url: strURL,
+    contentType: "application/json",
+  })
+  .then(function(data) {
+    return data; // Resolve the Promise with the data
+  })
+  .fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("Error fetching data: ", textStatus, errorThrown);
+    throw new Error("Request failed: " + textStatus + " - " + errorThrown); // Reject the Promise with an error
+  });
+}
+
+/*getJSONData(strURL)
+  .then(myData => {
+    console.log('Data received:', myData);
+	usrData = myData;
 	
-	var features = JSON.parse(sessionStorage.getItem("FEATURES"))
+	$("#listContainer2").html(_.template(userTemplate, usrData));
+	$('#listContainer2').trigger("create");			
 	
-	_.each(features, function(item){
-		if(item.parent_feature_id != null && item.parent_feature_id != undefined && item.parent_feature_id != ""){
-			item.isParentFeature = 'N';	
-		}else{
-			item.isParentFeature = 'Y';
-			item.childFeatures = [];
-		}
-	});
-	
-	childFeatures = _.reject(features, function(item){
-		return item.isParentFeature == 'Y';
-	})
-	
-	parentFeatures = _.reject(features, function(item){
-		return item.isParentFeature == 'N';
-	})
-	
-	_.each(parentFeatures, function(pitem){
-		_.each(childFeatures, function(citem){
-				if(pitem.id == citem.parent_feature_id){
-					pitem.childFeatures.push(citem)
-				}
-		})
-	})
-	
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });*/
+
+
+
+
+
+
+function serverRefresh(){
+	location.reload(true);
+}
+
+
+function buildMenu(){
 	
 	/*features = _.groupBy(features, "id")
 	
@@ -184,6 +230,9 @@ function buildMenu(){
 			
 	    };
 	});*/
+	
+	var menuTemplate = $("#menuTmpl").html();
+	
 
 	$("#menuContainer").html(_.template(menuTemplate, parentFeatures));
 	$('#menuContainer').trigger("create");

@@ -1,8 +1,6 @@
 
-var Data;
-var incomeTypes;
-
-
+var usrData
+var userTemplate;
 $(document).ready(function() {
 
 /*	$("#dateReceived").datepicker({
@@ -17,14 +15,14 @@ isUserLoggedIn()
 buildMenu();
 
 
-var userName = sessionStorage.getItem("USERNAME");
+userTemplate = $("#listTmpl").html();
 
-if(userName != "" && userName != null && userName != undefined){
-	$("#userName").html(userName);
-}
 	
-	
-	
+usrData = [];
+$("#listContainer2").html(_.template(userTemplate, usrData));
+$('#listContainer2').trigger("create");	
+
+/*	
 	
 	$("#incomeForm").validate({
 	    rules: {
@@ -37,37 +35,53 @@ if(userName != "" && userName != null && userName != undefined){
 			amount: {
 				required: true,
 			},
-/*			dateReceived: {
+			dateReceived: {
 				required: true,
-			}*/
+			}
 	    },
 
 	});
-	
-	//income types data
-	incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
-	var myTemplate = $("#incomeTypeTmpl").html();	 
-	//const template = _.template(myTemplate);
-	//const renderedHtml = template(incomeTypes);
-	//$('#incomeType').append(renderedHtml);
-	
-	
 
-	//Templating the added data
-	strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
-	var myTemplate = _.template($("#template").html());	 
-	var tableBody = $("#appendHere");
-	
-	getAPIdata(strURL,function(usrData){	
-		sessionStorage.setItem('INCOME_DASHDATA',JSON.stringify(usrData))
-		Data = usrData;
-		tableBody.append(myTemplate(Data));
-	})
-	
+*/
 	
 	
 	
 });
+
+
+function search(){
+	strURL = request_url + "/user/filter/"+ $("#userType").val() +"/"+ $("#Section").val();
+	usrData = getAPIdata(strURL);
+
+	$("#listContainer2").html(_.template(userTemplate, usrData));
+	$('#listContainer2').trigger("create");		
+	
+
+	  
+	  
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function saveIncomeInfo(event) {
  event.preventDefault(); 

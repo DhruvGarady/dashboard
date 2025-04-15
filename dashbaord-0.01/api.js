@@ -163,7 +163,8 @@ app.post('/user/addDOCuser', (req, res) => {
         sports_participation,
         volunteer_hours,
         last_login,
-        account_status
+        account_status,
+		roll_num
     } = req.body;
 
     // Check if required fields are provided
@@ -187,9 +188,9 @@ app.post('/user/addDOCuser', (req, res) => {
                 guardian_email, relationship, courses_enrolled, credits_earned, semester, 
                 tuition_status, blood_type, medical_conditions, emergency_contact_name, 
                 emergency_contact_phone, disciplinary_record, clubs_and_activities, 
-                sports_participation, volunteer_hours, last_login, account_status
+                sports_participation, volunteer_hours, last_login, account_status,roll_num
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         `;
 
         const values = [
@@ -200,7 +201,7 @@ app.post('/user/addDOCuser', (req, res) => {
             guardian_email, relationship, courses_enrolled, credits_earned, semester,
             tuition_status, blood_type, medical_conditions, emergency_contact_name,
             emergency_contact_phone, disciplinary_record, clubs_and_activities,
-            sports_participation, volunteer_hours, last_login, account_status
+            sports_participation, volunteer_hours, last_login, account_status,roll_num
         ];
 
         con.query(sql, values, (err, result) => {
@@ -266,7 +267,7 @@ app.get('/user/getById/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active` FROM doc_users WHERE is_active = "Y" AND id = ?', 
+ con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `roll_num`, `is_active` FROM doc_users WHERE is_active = "Y" AND id = ?', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -289,7 +290,7 @@ app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
 		               guardian_email, relationship, courses_enrolled, credits_earned, semester, 
 		               tuition_status, blood_type, medical_conditions, emergency_contact_name, 
 		               emergency_contact_phone, disciplinary_record, clubs_and_activities, 
-		               sports_participation, volunteer_hours, last_login, account_status 
+		               sports_participation, volunteer_hours, last_login, account_status,roll_num 
 			FROM doc_users WHERE is_active = "Y"`;
 					   
     const params = [];
@@ -330,7 +331,7 @@ app.get('/user/getUsers',(req,res) => {
 	               guardian_email, relationship, courses_enrolled, credits_earned, semester, 
 	               tuition_status, blood_type, medical_conditions, emergency_contact_name, 
 	               emergency_contact_phone, disciplinary_record, clubs_and_activities, 
-	               sports_participation, volunteer_hours, last_login, account_status
+	               sports_participation, volunteer_hours, last_login, account_status,roll_num
 	        FROM doc_users 
 	        WHERE is_active = "Y"`, 
  [id], (err, result) => {

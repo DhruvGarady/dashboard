@@ -16,6 +16,9 @@ $(document).ready(function() {
 isUserLoggedIn()
 buildMenu();
 
+//serverRefresh()
+
+
 
 var userName = sessionStorage.getItem("USERNAME");
 
@@ -45,8 +48,8 @@ if(userName != "" && userName != null && userName != undefined){
 	});
 	
 	//income types data
-	incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
-	var myTemplate = $("#incomeTypeTmpl").html();	 
+	//incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
+	//var myTemplate = $("#incomeTypeTmpl").html();	 
 	//const template = _.template(myTemplate);
 	//const renderedHtml = template(incomeTypes);
 	//$('#incomeType').append(renderedHtml);

@@ -1,5 +1,7 @@
 var request_url = "http://localhost:3002";
 
+//var request_url = "http://13.61.24.181:3002";
+
 //var request_url = "http://13.60.193.14:3002";
 
 $(function(){
