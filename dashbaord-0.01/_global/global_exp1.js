@@ -15,6 +15,9 @@ $(function() {
 	var features = JSON.parse(sessionStorage.getItem("FEATURES"))*/
 
 	_.each(features, function(item){
+		
+		item.feature_name = item.feature_name.toLowerCase();
+		
 		if(item.parent_feature_id != null && item.parent_feature_id != undefined && item.parent_feature_id != ""){
 			item.isParentFeature = 'N';	
 		}else{
@@ -205,8 +208,20 @@ function getJSONData(strURL) {
   .catch(error => {
     console.error('Error:', error.message);
   });*/
+function setUsrName(){
+	var userName = sessionStorage.getItem("USERNAME");
 
+	if(userName != "" && userName != null && userName != undefined){
+		$("#userName").html(userName);
+	}
+		
+}
 
+function functionLogout(){
+	sessionStorage.clear();
+	localStorage.clear();
+	location.href = "../index.html"
+}
 
 
 

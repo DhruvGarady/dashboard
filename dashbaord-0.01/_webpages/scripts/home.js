@@ -18,14 +18,9 @@ buildMenu();
 
 //serverRefresh()
 
+setUsrName()
 
 
-var userName = sessionStorage.getItem("USERNAME");
-
-if(userName != "" && userName != null && userName != undefined){
-	$("#userName").html(userName);
-}
-	
 	
 	
 	

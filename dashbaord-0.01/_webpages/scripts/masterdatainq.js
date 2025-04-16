@@ -5,23 +5,12 @@ var incomeTypes;
 
 $(document).ready(function() {
 
-/*	$("#dateReceived").datepicker({
-		//beforeShowDay: $.datepicker.noWeekends,
-		dateFormat:'yy-mm-dd',
-		changeMonth: true,
-		changeYear: true
-	});	*/
 
  	
 isUserLoggedIn()
 buildMenu();
+setUsrName()
 
-
-var userName = sessionStorage.getItem("USERNAME");
-
-if(userName != "" && userName != null && userName != undefined){
-	$("#userName").html(userName);
-}
 	
 	
 	
@@ -44,25 +33,7 @@ if(userName != "" && userName != null && userName != undefined){
 
 	});
 	
-	//income types data
-	incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
-	var myTemplate = $("#incomeTypeTmpl").html();	 
-	//const template = _.template(myTemplate);
-	//const renderedHtml = template(incomeTypes);
-	//$('#incomeType').append(renderedHtml);
-	
-	
 
-	//Templating the added data
-	/*strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
-	var myTemplate = _.template($("#template").html());	 
-	var tableBody = $("#appendHere");*/
-	
-/*	getAPIdata(strURL,function(usrData){	
-		sessionStorage.setItem('INCOME_DASHDATA',JSON.stringify(usrData))
-		Data = usrData;
-		tableBody.append(myTemplate(Data));
-	})*/
 	
 	
 	

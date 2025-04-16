@@ -13,6 +13,8 @@ $(document).ready(function() {
  	
 isUserLoggedIn()
 buildMenu();
+setUsrName()
+
 
 
 userTemplate = $("#listTmpl").html();
@@ -55,10 +57,6 @@ function search(){
 
 	$("#listContainer2").html(_.template(userTemplate, usrData));
 	$('#listContainer2').trigger("create");		
-	
-
-	  
-	  
 
 }
 
@@ -172,18 +170,15 @@ function deleteAll(){
 	});	
 }*/
 
-function incomeDel(id){
+function deleteUsr(id){
 	
-	var bool= window.confirm("Are you sure you want to delete this record?");
+	var bool= window.confirm("Are you sure you want to delete this user?");
 
 	if(bool == true){
 		$.ajax({
-		    url: request_url + '/incomeid/delete/'+ id,
-		    type: 'DELETE',
-		    success: function(response) {
-		        console.log('Record deleted successfully:', response);
-				refresh()
-			},
+		    url: request_url + '/user/deleteUserById/'+ id,
+		    type: 'PUT',
+		    success: onUsrDelSuccuess,
 		    error: function(xhr, status, error) {
 				alert("There was a problem");
 		        console.error('Error deleting record:', error);
@@ -192,6 +187,11 @@ function incomeDel(id){
 
 	}	
 
+}
+
+function onUsrDelSuccuess(){
+	alert("User deleted.")
+	search();
 }
 
 function saveInlineIncome(id){

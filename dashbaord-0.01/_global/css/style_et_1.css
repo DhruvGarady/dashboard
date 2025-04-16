@@ -1,4 +1,16 @@
 /* fallback */
+  .btn:focus, 
+  .btn:active:focus, 
+  .btn.active:focus, 
+  .btn.focus, 
+  .btn:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn:hover {
+    box-shadow: none !important;
+  }
 @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -60,8 +72,12 @@ html, body {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	/* margin-bottom:10px; */
 }
+
+
 #userName{
 	color:white;
+	background: #3675ff;
+	border: none;
 }
 /* -------------Menu--------------- */
 .mainNav{
@@ -69,7 +85,8 @@ html, body {
 }
 
 #menuContainer {
-    background: #383d41; /* Your preferred background color */
+    background: #383d41;  
+    /* background-color: #f8f9fa; */
    /*  border-radius:10px; */
     height: 90vh; /* Set a fixed height */
     overflow-y:auto;
@@ -78,18 +95,25 @@ html, body {
 
 
 #menuContainer td {
-    padding: 9px 6px;
-    color: white;
-    font-size: 16px;
-    /* font-weight: bold; */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 6px;
+    font-size: .825rem;
+	font-weight: 400;
+   /*  color: #333; */
+   color: white;
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
     cursor: pointer;
     transition: background 0.3s;
 }
 
-#menuContainer tr:hover {
-    background: #2e3236; 
+
+#menuTd, #submenuTd{
+	text-transform: capitalize;;
 }
+
+ #menuContainer tr:hover {
+    background: #3a3f44; 
+     transition: background 0.2s;
+} 
 /* Custom scrollbar for Chrome, Safari & Edge */
 
 #menuContainer::-webkit-scrollbar {
@@ -126,7 +150,7 @@ html, body {
   	font-size: 20px;
   	padding-top: 0px;
   	padding-bottom: 12px;
-  	
+  	font-weight:400;
  }
  
  
@@ -140,13 +164,15 @@ padding-left: 3%;
  .form-group{
  	display: block; 
  	margin-bottom: 0.0rem;
+ 	font-weight:100;
  }
 
  
  select, input {
   width: 100%;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: .825rem;
+  font-weight:400;
   color: #2c3e50;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -181,6 +207,14 @@ select option {
  	border: none;
  	background-color: #1a73e8;
 }
+.deleteBtn{
+ 	width:44px !important; 
+ 	text-align:center;
+ 	color: #fff;
+ 	border: none;
+ 	background-color: red;	
+}
+
 
 
  .dataTbl {
@@ -198,7 +232,8 @@ select option {
   color: #ecf0f1;
   text-align: left;
  padding: 12px 15px; 
-  font-size: 14px;
+  font-size: .825rem;
+  font-weight:400;
   border-bottom: 2px solid #34495e;
 }
 
@@ -206,12 +241,13 @@ select option {
   padding: 12px 16px;
   border-bottom: 1px solid #ddd;
   color: #333;
-  font-size: 14px;
+  font-size: .825rem;
+  font-weight:400;
 }
 
- .dataTbl  tr:nth-child(even) {
+/*  .dataTbl  tr:nth-child(even) {
   background-color: #f9f9f9;
-} 
+}  */
 
 /* Optional: Hover effect */
 .dataTbl tr:hover {

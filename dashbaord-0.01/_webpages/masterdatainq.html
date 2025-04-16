@@ -51,7 +51,18 @@ body{
 
     <!-- Right-aligned items -->
     <div>
-      <a class="navbar-brand" href="#"><div id="userName"></div></a>
+   <!--   <a class="navbar-brand" href="#"> <div id="userName"></div> 
+      </a>-->
+			
+		<div class="btn-group dropleft">
+		  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userName">
+		  </button>
+		  <div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Profile</a>
+    <a class="dropdown-item" onclick="functionLogout()">Logout</a>
+		  </div>
+		</div>			
+			
     </div>
   </div>
 </nav>
@@ -68,7 +79,6 @@ body{
     		<td><button type="button" class="btn btn-danger">Back</button></td>
     	</tr>
     </table>     -->
-   
   <div id="menuContainer" style="overflow-y:auto;">
 	<script type="text/template" id="menuTmpl">
         
@@ -77,14 +87,18 @@ body{
              <table class="menuTable" id="menuTable" style="width:100%; overflow-y:auto;">
 				<tr class="menuTr" id="menuTr">
  					<td class="menuTd" id="menuTd" width="10%" onclick="linkPage('<%= item.feature_url %>')"><i class="material-icons"><%= item.icon %></i></td>
-                    <td class="menuTd" id="menuTd" width="90%" onclick="linkPage('<%= item.feature_url %>')"><%= (item.feature_name)%></td>
-                </tr>
+                    <td class="menuTd" id="menuTd" width="90%" onclick="linkPage('<%= item.feature_url %>')"><%= (item.feature_name) %></td>
+				<% if(item.childFeatures != null && item.childFeatures != undefined && item.childFeatures != ""){%>
+					<td class="menuTd" id="menuTd" width="1%" onclick="linkPage('<%= item.feature_url %>')"><i class="material-icons">arrow_drop_down</i></td>
+                <% }%>
+				</tr>
 
 				<% if(item.childFeatures != null && item.childFeatures != undefined && item.childFeatures != ""){%>
 					<%_.each(item.childFeatures, function(oitem, index){ %>
 					<tr class="menuTr" id="menuTr">
-						<td class="submenuTd" id="submenuTd" width="20%" onclick="linkPage('<%= oitem.feature_url %>')"></td>
-                    	<td class="submenuTd" id="submenuTd" width="80%" onclick="linkPage('<%= oitem.feature_url %>')"><%= oitem.feature_name %></td>
+						<td class="submenuTd" id="submenuTd" width="10%" onclick="linkPage('<%= oitem.feature_url %>')"></td>
+                    	<td class="submenuTd" id="submenuTd" width="90%" onclick="linkPage('<%= oitem.feature_url %>')"><%= oitem.feature_name %></td>
+						<td class="submenuTd" id="submenuTd" width="1%" onclick="linkPage('<%= oitem.feature_url %>')"></td>
 					</tr>	       	
 				      <% }); %>	
 				<% }%>
