@@ -1,8 +1,6 @@
 
-var Data;
-var incomeTypes;
-
-
+var usrData
+var userTemplate;
 $(document).ready(function() {
 
 /*	$("#dateReceived").datepicker({
@@ -13,6 +11,20 @@ $(document).ready(function() {
 	});	*/
 
  	
+isUserLoggedIn()
+buildMenu();
+setUsrName()
+
+
+
+userTemplate = $("#listTmpl").html();
+
+	
+usrData = [];
+$("#listContainer2").html(_.template(userTemplate, usrData));
+$('#listContainer2').trigger("create");	
+
+/*	
 	
 	$("#incomeForm").validate({
 	    rules: {
@@ -25,37 +37,49 @@ $(document).ready(function() {
 			amount: {
 				required: true,
 			},
-/*			dateReceived: {
+			dateReceived: {
 				required: true,
-			}*/
+			}
 	    },
 
 	});
-	
-	//income types data
-	incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
-	var myTemplate = $("#incomeTypeTmpl").html();	 
-	const template = _.template(myTemplate);
-	const renderedHtml = template(incomeTypes);
-	$('#incomeType').append(renderedHtml);
-	
-	
 
-	//Templating the added data
-	strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
-	var myTemplate = _.template($("#template").html());	 
-	var tableBody = $("#appendHere");
-	
-	getAPIdata(strURL,function(usrData){	
-		sessionStorage.setItem('INCOME_DASHDATA',JSON.stringify(usrData))
-		Data = usrData;
-		tableBody.append(myTemplate(Data));
-	})
-	
+*/
 	
 	
 	
 });
+
+
+function search(){
+	strURL = request_url + "/user/filter/"+ $("#userType").val() +"/"+ $("#Section").val();
+	usrData = getAPIdata(strURL);
+
+	$("#listContainer2").html(_.template(userTemplate, usrData));
+	$('#listContainer2').trigger("create");		
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function saveIncomeInfo(event) {
  event.preventDefault(); 
@@ -146,18 +170,15 @@ function deleteAll(){
 	});	
 }*/
 
-function incomeDel(id){
+function deleteUsr(id){
 	
-	var bool= window.confirm("Are you sure you want to delete this record?");
+	var bool= window.confirm("Are you sure you want to delete this user?");
 
 	if(bool == true){
 		$.ajax({
-		    url: request_url + '/incomeid/delete/'+ id,
-		    type: 'DELETE',
-		    success: function(response) {
-		        console.log('Record deleted successfully:', response);
-				refresh()
-			},
+		    url: request_url + '/user/deleteUserById/'+ id,
+		    type: 'PUT',
+		    success: onUsrDelSuccuess,
 		    error: function(xhr, status, error) {
 				alert("There was a problem");
 		        console.error('Error deleting record:', error);
@@ -166,6 +187,11 @@ function incomeDel(id){
 
 	}	
 
+}
+
+function onUsrDelSuccuess(){
+	alert("User deleted.")
+	search();
 }
 
 function saveInlineIncome(id){
