@@ -2,6 +2,11 @@
 var Data;
 var incomeTypes;
 
+var userTypeCount = [];
+var userType = [];
+
+var userCountPerSemCount = [];
+var semCount = [];
 
 $(document).ready(function() {
 
@@ -22,48 +27,38 @@ setUsrName()
 
 
 	
-	
-	
-	$("#incomeForm").validate({
-	    rules: {
-	        month: { 
-				required: true,
-				},
-	        incomeType: { 
-				required: true,
-			},
-			amount: {
-				required: true,
-			},
-/*			dateReceived: {
-				required: true,
-			}*/
-	    },
 
-	});
-	
-	//income types data
-	//incomeTypes = JSON.parse(sessionStorage.getItem("INCOME_TYPES"))
-	//var myTemplate = $("#incomeTypeTmpl").html();	 
-	//const template = _.template(myTemplate);
-	//const renderedHtml = template(incomeTypes);
-	//$('#incomeType').append(renderedHtml);
-	
+strURL = request_url + "/user/getUsersCount";
+userCount = getAPIdata(strURL);
+if(userCount != null && userCount != "" && userCount != undefined){
+	$("#totUsers").text(userCount[0].totalUsers);
+}
+
+
+strURL2 = request_url + "/user/getStudentsCount";
+studentCount = getAPIdata(strURL2);
+if(studentCount != null && studentCount != "" && studentCount != undefined){
+	$("#totStudents").text(studentCount[0].numberOfStudents);
+}
+
+
+strURL3 = request_url + "/user/getFacultyCount";
+facultyCount = getAPIdata(strURL3);
+if(facultyCount != null && facultyCount != "" && facultyCount != undefined){
+	$("#totfaculty").text(facultyCount[0].numberOfFaculty);
+}
+
+
+strURL4 = request_url + "/user/getStaffCount";
+staffCount = getAPIdata(strURL4);
+if(staffCount != null && staffCount != "" && staffCount != undefined){
+	$("#totStaff").text(staffCount[0].numberOfStaff);
+}	
 	
 
-	//Templating the added data
-/*	strURL = request_url + "/income/data/"+ sessionStorage.getItem("USER_ID");
-	var myTemplate = _.template($("#template").html());	 
-	var tableBody = $("#appendHere");
 	
-	getAPIdata(strURL,function(usrData){	
-		sessionStorage.setItem('INCOME_DASHDATA',JSON.stringify(usrData))
-		Data = usrData;
-		tableBody.append(myTemplate(Data));
-	})*/
-	
-	
-	
+createUserChart();
+createStudentEnrolledBySem();
 	
 });
 
@@ -218,4 +213,391 @@ function createIncomeChart(){
 	}else{
 		dasboard();		
 	}
+}
+
+
+function createUserChart(){
+	strURL = request_url + "/user/getStudentsPerSemCount";
+	userCountPerSem = getAPIdata(strURL);
+	
+	if(userCountPerSem != null && userCountPerSem != "" && userCountPerSem != undefined){
+		
+		_.each(userTypesCount, function(item){
+			userCountPerSemCount.push(item.count);
+			semCount.push(item.semester);
+		});
+			
+		//Charts
+
+		const doughnutLabelsLine = {
+			    		  id: "doughnutLabelsLine",
+			    		  
+			    		  beforeDraw(chart, args, options) {
+			    		    const {
+			    		      ctx,
+			    		      chartArea: { width, height, top, bottom, left, right} } = chart;
+
+							const sum = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+							
+			    		    chart.data.datasets.forEach((dataset, i) => {
+			    		    	chart.getDatasetMeta(i).data.forEach((datapoint,index) => {
+			    		    		
+			    		    		//console.log(chart.data.labels)
+			    		    		const {x,y} = datapoint.tooltipPosition();
+			    		    		
+			    		/*     		ctx.fillStyle = dataset.borderColor[index];
+			    		    		ctx.fill();*/
+			    		    		
+			    					//console.log(x);    		
+									
+			    					const halfwidth = width / 2;
+			    					const halfheight = height / 2;
+			    					
+			    					
+			    					const xLine = x >= halfwidth ? x + 30: x -30;
+			    					const yLine = y >= halfheight ? y + 30: y -30;
+			    					const extraLine = x >= halfwidth ? 15 : -15
+			    					
+			    					
+			    					
+			    					ctx.beginPath();
+			    					ctx.moveTo(x,y);
+			    					ctx.lineTo(xLine, yLine);
+			    					ctx.lineTo(xLine + extraLine ,yLine);
+			    					ctx.strokeStyle = dataset.borderColor[index];
+			    					ctx.stroke();
+			    		    		
+			    					const textWidth = ctx.measureText(chart.data.labels[index]).width;
+			    					
+			    					
+			    					const textXPosition = x >= halfwidth ? 'left' : 'right';
+			    					const plusFivePx = x >= halfwidth ? 5 : -5;
+			    					ctx.textBaseline ='middle';
+			    					ctx.textAlign = textXPosition;
+			    					//ctx.fillStyle = dataset.borderColor[index];
+			    					ctx.fillStyle = "black";
+			    					ctx.font='12px Arial';
+		/*	    					ctx.fillText(
+			                		((chart.data.datasets[0].data[index] * 100) / sum).toFixed(2) +
+					                  "%",
+					                xLine + extraLine + plusFivePx,
+					                yLine
+					              );*/
+								  ctx.fillText(
+								      chart.data.labels[index], // Display the label text
+								      xLine + extraLine + plusFivePx,
+								      yLine
+								  );
+			    								
+			    		    	})
+			    		    })
+			    		  },
+			    		};
+			    		
+
+			
+						const pieLabelsLine = {
+						        id: "pieLabelsLine",
+						        beforeDraw(chart) {
+						          const {
+						            ctx,
+						            chartArea: { width, height },
+						          } = chart;
+
+						          const cx = chart._metasets[0].data[0].x;
+						          const cy = chart._metasets[0].data[0].y;
+
+						          const sum = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+						          chart.data.datasets.forEach((dataset, i) => {
+						            chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
+						              const { x: a, y: b } = datapoint.tooltipPosition();
+
+						              const x = 2 * a - cx;
+						              const y = 2 * b - cy;
+
+						              // draw line
+						              const halfwidth = width / 2;
+						              const halfheight = height / 2;
+						              const xLine = x >= halfwidth ? x + 20 : x - 20;
+						              const yLine = y >= halfheight ? y + 20 : y - 20;
+
+						              const extraLine = x >= halfwidth ? 10 : -10;
+
+						              ctx.beginPath();
+						              ctx.moveTo(x, y);
+						              ctx.arc(x, y, 0, 0, 2 * Math.PI, true);
+						              ctx.fill();
+						              ctx.moveTo(x, y);
+						              ctx.lineTo(xLine, yLine);
+						              ctx.lineTo(xLine + extraLine, yLine);
+						              ctx.strokeStyle = dataset.backgroundColor[index];
+						              //ctx.strokeStyle = "black";
+						              ctx.stroke();
+
+						              // text
+						              const textWidth = ctx.measureText(chart.data.labels[index]).width;
+						              ctx.font = "12px Arial";
+						              // control the position
+						              const textXPosition = x >= halfwidth ? "left" : "right";
+						              const plusFivePx = x >= halfwidth ? 5 : -5;
+						              ctx.textAlign = textXPosition;
+						              ctx.textBaseline = "middle";
+						              //ctx.fillStyle = dataset.backgroundColor[index];
+						              //ctx.fillStyle = dataset.borderColor[index];
+						              ctx.fillStyle = "black";
+
+									  ctx.fillText(
+									      chart.data.labels[index], // Display the label text
+									      xLine + extraLine + plusFivePx,
+									      yLine
+									  );
+						            });
+						          });
+						        },
+						      };  	
+				
+						
+		const ProductionMachineData = {
+		    labels: userType,
+		    datasets: [{
+		      label: 'Production Machine By Volume',
+		      data: userTypeCount,
+		      borderWidth: 0.8,
+		      backgroundColor: 			  [
+			    '#DC3535FF', // Bold Red
+			    '#FFB200FF', // Bright Orange-Yellow
+			    '#FF4949FF', // Light Red
+			    '#E8AA42FF', // Golden Orange
+			    '#CD104DFF', // Deep Pink-Red
+			    '#2B2D42FF'  // Dark Blue-Grey (a cool contrast to the warm tones)
+			  ],
+		      borderColor:[
+			  '#DC3535FF', // Bold Red
+			  '#FFB200FF', // Bright Orange-Yellow
+			  '#FF4949FF', // Light Red
+			  '#E8AA42FF', // Golden Orange
+			  '#CD104DFF', // Deep Pink-Red
+			  '#2B2D42FF'  // Dark Blue-Grey (a cool contrast to the warm tones)
+			],
+		    }]
+		  };
+		  
+
+
+		  // Options for the chart
+		  const ProductionMachineOptions = {
+			responsive: true,
+		    maintainAspectRatio: false,
+		    cutout: '40%',
+		    plugins: {
+		      tooltip: {
+		        backgroundColor: 'white',
+		        bodyColor: 'black',
+		        titleColor: 'black',
+		        footerColor: 'black',
+		        borderColor: '#ddd',
+		        borderWidth: 1,
+		        callbacks: {
+		          label: function(tooltipItem) {
+		            const dataset = tooltipItem.dataset;
+		            const index = tooltipItem.dataIndex;
+		            const machineName = tooltipItem.chart.data.labels[index];
+		            const value = dataset.data[index];
+		            const productionVolume = value * 1.5;
+
+		            return [
+		              `User: ${machineName}`,
+		              `Count: ${value}`,
+		            ];
+		          }
+		        },
+		        displayColors: false
+		      },
+		      legend: {
+		        display: false,
+		      },
+		      datalabels: {
+				display:false,
+		        color: 'white',
+		        anchor: 'center',
+		        align: 'center',
+		        formatter: function(value) {
+		          return value.toLocaleString() + '%';
+		        },
+		      },
+		      doughnutLabelsLine: {} // Ensure this plugin is added
+		    },
+		    layout: {
+		      padding: {
+		        top: 50,
+		        bottom: 130 // Adjusted bottom padding
+		      }
+		    },
+		            scales: {
+		          y: {
+		            display: false,
+		            beginAtZero: true,
+		            ticks: {
+		              display: false,
+		            },
+		            grid: {
+		              display: false,
+		            },
+		          },
+		          x: {
+		            display: false,
+		            ticks: {
+		              display: false,
+		            },
+		            grid: {
+		              display: false,
+		            },
+		          },
+		        },
+		  };
+
+		  // Create the chart
+		  const ct9 = document.getElementById('ProductionMachineChart').getContext('2d');
+		  const chart2 = new Chart(ct9, {
+		    type: 'doughnut',
+		    data: ProductionMachineData,
+		    options: ProductionMachineOptions,
+		    plugins: [{
+		      beforeInit: function(chart) {
+		        if (chart.canvas.id === "ProductionMachineChart") {
+		          const ul = document.createElement('ul');
+		          chart.data.datasets[0].data.forEach((data, i) => {
+		            const color = chart.data.datasets[0].backgroundColor[i];
+		            const label = chart.data.labels[i];
+
+		            ul.innerHTML += `
+		              <li>
+		                <span class="material-icons" style="color: ${color};">donut_large</span>
+		                ${label}
+		              </li>
+		            `;
+		          });
+
+		          document.getElementById("js-legend2").appendChild(ul);
+		        }
+		      }
+		    }, doughnutLabelsLine] // Ensure the plugin is added here
+		  });		
+		
+		
+	}
+}
+
+
+function createStudentEnrolledBySem(){
+	
+	
+	 const ct3 = document.getElementById('ProductionEffiChart').getContext('2d'); // Corrected to get the 2D context
+
+	const prodEffiData = {
+	    labels: ['Primary Forming', 'Pre-Heating', 'Iron Making', 'Cooling and Final Grinding', 'Primary Steel Making', 'Continuous Casting'],
+	    datasets: [
+	        {
+	            label: 'Student Count',
+	            data: [201.33,200.85,196.07,197.77,194.33,191.90],
+	            backgroundColor: 'rgb(205, 16, 76)',
+	            maxBarThickness: 25,
+	        },
+	        /*{
+	            label: 'Downtime Hours',
+	            data: [7.74,7.60,7.32,7.3,7.27,7.23],
+	            backgroundColor: '#ffc107ff',
+	            maxBarThickness: 25,
+	        }*/
+	    ]
+	};
+
+	const prodEffiOptions = {
+	    plugins: {
+	        legend: {
+	            display: false
+	        },
+	        tooltip: {
+	            backgroundColor: 'white',
+	            bodyColor: 'black',
+	            titleColor: 'black',
+	            footerColor: 'black',
+	            borderColor: '#ddd',
+	            borderWidth: 1,
+	            callbacks: {
+	                label: function (tooltipItem) {
+	                    const datasetLabel = tooltipItem.dataset.label;
+	                    const value = tooltipItem.raw;
+	                    return [`${datasetLabel}: ${value.toLocaleString()}`];
+	                }
+	            },
+	            displayColors: false
+	        },
+	        datalabels: {
+				display:false,
+	            anchor: 'end',
+	            align: 'end',
+	            color: 'black',
+	            padding: -2,
+	            formatter: function (value) {
+	                return value;
+	            },
+	        }
+	    },
+	    indexAxis: 'y',
+	    scales: {
+	        x: {
+	            stacked: true
+	        },
+	        y: {
+	            stacked: true,
+	            grid:{
+					display:false,
+				}
+	        }
+	    },
+	    layout: {
+	        padding: {
+	            top: 25,
+	            bottom: 10,
+	            right: 10,
+	            left: 10
+	        }
+	    }
+	};
+
+	const chart1 = new Chart(ct3, {
+	    type: 'bar',
+	    data: prodEffiData,
+	    options: prodEffiOptions,
+	    /*plugins: [{
+	        beforeInit: function (chart) {
+	            // Ensure we're applying the legend to the right chart
+	            if (chart.canvas.id === "ProductionEffiChart") {
+	                const ul = document.createElement('ul');
+	                chart.data.datasets.forEach((dataset) => {
+	                    let icon = 'bar_chart';
+	                    let color = 'black';
+
+	                    if (dataset.label === "Runtime Hours") {
+	                        color = 'rgb(205, 16, 76)';
+	                    } else if (dataset.label === "Downtime Hours") {
+	                        color = '#ffc107ff';
+	                    }
+
+	                    ul.innerHTML += `
+	                        <li>
+	                            <span class="material-icons" style="color: ${color};">${icon}</span>
+	                            ${dataset.label}
+	                        </li>
+	                    `;
+	                });
+
+	                // Append the generated HTML to the legend container
+	                document.getElementById("legend3").appendChild(ul);
+	            }
+	        }
+	    }]*/
+	});
 }

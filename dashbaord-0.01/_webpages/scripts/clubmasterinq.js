@@ -16,13 +16,9 @@ buildMenu();
 setUsrName()
 
 
-
 userTemplate = $("#listTmpl").html();
 
 	
-usrData = [];
-$("#listContainer2").html(_.template(userTemplate, usrData));
-$('#listContainer2').trigger("create");	
 
 /*	
 	

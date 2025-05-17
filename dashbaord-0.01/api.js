@@ -345,6 +345,96 @@ app.get('/user/getUsers',(req,res) => {
 
 
 
+// ----------------------API for dashbord------------------------
+app.get('/user/getUsersCount',(req,res) => {
+
+ con.query(	`SELECT COUNT(*) AS totalUsers FROM doc_users
+			WHERE  is_active = "Y"`, 
+(err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
+
+
+app.get('/user/getStudentsCount',(req,res) => {
+
+ con.query(	`SELECT COUNT(*) AS numberOfStudents FROM doc_users
+	WHERE user_type = "STUDENT"
+	AND  is_active = "Y"`, (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
+
+
+app.get('/user/getFacultyCount',(req,res) => {
+
+ con.query(	`SELECT COUNT(*) AS numberOfFaculty FROM doc_users
+	WHERE user_type IN ("TEACHER","HOD","VP","PRINCIPAL")
+	AND  is_active = "Y"`, (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
+
+app.get('/user/getStaffCount',(req,res) => {
+
+ con.query(	`	SELECT COUNT(*) AS numberOfStaff FROM doc_users
+		WHERE user_type = "STAFF"
+		AND  is_active = "Y"`, (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+});
+
+
+
+app.get('/user/getUserTypeCount',(req,res) => {
+
+ con.query(	`SELECT user_type, COUNT(*) AS COUNT
+	FROM doc_users
+	WHERE is_active = "Y"
+	GROUP BY user_type;`, (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
+app.get('/user/getStudentsPerSemCount',(req,res) => {
+
+ con.query(	`	select semester, COUNT(*) AS count
+	from doc_users
+	where is_active = "Y"
+	and user_type = 'STUDENT'
+	group by semester
+	order by semester ASC;`, (err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
+
 //---------------------delete users--------------------
 
 app.put('/user/deleteUserById/:id', (req, res) => {

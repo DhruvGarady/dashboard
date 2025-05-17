@@ -4,88 +4,9 @@ var myPage;
 var parentFeatures;
 $(function() {
 
-	strURL = request_url + "/feature/getFeature";
-	
-	features = getAPIdata(strURL)
-
-/*	getAPIdata(strURL,function(data){	
-		sessionStorage.setItem('FEATURES',JSON.stringify(data))
-	});
-
-	var features = JSON.parse(sessionStorage.getItem("FEATURES"))*/
-
-	_.each(features, function(item){
-		
-		item.feature_name = item.feature_name.toLowerCase();
-		
-		if(item.parent_feature_id != null && item.parent_feature_id != undefined && item.parent_feature_id != ""){
-			item.isParentFeature = 'N';	
-		}else{
-			item.isParentFeature = 'Y';
-			item.childFeatures = [];
-		}
-	});
-
-	childFeatures = _.reject(features, function(item){
-		return item.isParentFeature == 'Y';
-	})
-
-	parentFeatures = _.reject(features, function(item){
-		return item.isParentFeature == 'N';
-	})
-
-	_.each(parentFeatures, function(pitem){
-		_.each(childFeatures, function(citem){
-				if(pitem.id == citem.parent_feature_id){
-					pitem.childFeatures.push(citem)
-				}
-		})
-	})
-
-	sessionStorage.setItem('FEATURES',JSON.stringify(parentFeatures))
-
-	
-		
-	//isUserLoggedIn();	
-	//buildMenu();
-	
-
-	/*var usrName = sessionStorage.getItem("USERNAME");
-	if(usrName != "" && usrName != null && usrName != undefined){
-		sessionStorage.setItem("USERNAME","Guest");
-	}
-	usrName = sessionStorage.getItem("USERNAME");
-	$("#LoginName").html(usrName)
-
-	
-	
-		
-	if(usrName == "Guest"){
-		$('.login').show();			
-	}else{
-		$('.login').hide();
-	}
-	if(sessionStorage.getItem("USER_ID") != null && sessionStorage.getItem("USER_ID") != "" && sessionStorage.getItem("USER_ID") != undefined){
-		$('.logout').show();
-	}
-*/
 
 });
 
-
-/*function openLoginPopup(){
-	$("#loginMenu").dialog("open")
-	
-	$('#loginForm').on('keypress', function(e) {
-	    if (e.which === 13) {  // 13 is the Enter key
-	        e.preventDefault(); // Prevent the default form submission
-	        userLogin(e); 
-		};
-	})
-}
-function closeLoginPopup(){
-	$("#loginMenu").dialog("close")
-}*/
 
 function isUserLoggedIn(){
 	var userId = sessionStorage.getItem("USER_ID");
@@ -246,6 +167,8 @@ function buildMenu(){
 	    };
 	});*/
 	
+	
+	parentFeatures = JSON.parse(sessionStorage.getItem('FEATURES'));
 	var menuTemplate = $("#menuTmpl").html();
 	
 
