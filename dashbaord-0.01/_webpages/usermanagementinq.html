@@ -119,10 +119,10 @@ body{
 			</tr>
 		</table>
  
-		<table width="50%">
+		<table width="99%">
 	
 	<tr>
-		<td width="20%">	
+		<td width="10%">	
 		<div class="">
 			<label class="form-group">User Type:</label>
 			<select id="userType" name="userType" style="width:100%">
@@ -140,7 +140,7 @@ body{
 	
 		<td width="2%"></td>
 		
-		<td width="20%">	
+		<td width="10%">	
 		<div class="">
 			<label class="form-group">Section:</label>
 			<select id="Section" name="Section" style="width:100%">
@@ -160,13 +160,22 @@ body{
 		<td width="2%"></td>
 		
 		<td width="20px" style="vertical-align:bottom;">	
-			<input type="button" value="Search" onclick="search()" class="search">	  
-
+			<input type="button" value="Search" onclick="search()" class="search">	  	
 		</td>			
+
+		<td width="30%"></td>
+
+		<td width="20px" style="vertical-align:bottom;text-align:right;">	
+			<div class="tooltip-wrapper">
+			  <input type="button" value="+" onclick="addUser()" class="actionButton">
+			  <div class="tooltip-text">Add new user</div>
+			</div>
+		</td>
+
 	
 	</tr>	
 		</table>    
-    
+    	
     
     </div>		
 		
@@ -183,14 +192,14 @@ body{
 		<table style="width:100%;" class="dataTbl">
 			  <tr>
 				<th width="3%">Roll Number</th>
-				<th width="5%">First Name</th>
-				<th width="5%">Last Name</th>
+				<th width="7%">First Name</th>
+				<th width="7%">Last Name</th>
 				<th width="3%">Class Section</th>
 				<th width="7%">Course</th>
-				<th width="4%">Attendace %</th>
+				<th width="4%">Attendance %</th>
 				<th width="4%">Tuition Status</th>
-				<th width="2%">Edit</th>
-				<th width="1%" style="text-align:center;">Del</th>
+				<th width="1%">Edit</th>
+				<th width="2%" style="text-align:center;">Del</th>
 			  </tr>	
         
 	<%
@@ -203,8 +212,11 @@ _.each(usrData, function(item){ %>
 				<td><%= item.course %></td>
 				<td><%= item.attendance_percentage %></td>
 				<td><%= item.tuition_status %></td>
-				<td onclick="editUsr(<%= item.id %>)" ><i class="material-icons">edit</i></td>
-				<td style="text-align:center;"><i class="material-icons"><input type="button" value="Del" onclick="deleteUsr(<%= item.id %>)" class="deleteBtn"></td>
+				<td onclick="editUsr(<%= item.id %>)" ><div class="tooltip-wrapper">
+												<i class="material-icons">edit</i><div class="tooltip-text">Edit User</div>
+			</div></td>
+				<td style="text-align:center;" onclick="deleteUsr(<%= item.id %>)"><div class="tooltip-wrapper"><i class="material-icons">delete_forever</i><div class="tooltip-text">Delete User</div>
+			</div></td>
 			</tr>
        
 	<% }); %>

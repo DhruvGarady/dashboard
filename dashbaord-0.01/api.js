@@ -1,6 +1,5 @@
 var express = require('express')
-var mysql = require("mysql")
-var mysql = require('mysql2');
+const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -39,16 +38,25 @@ const con = mysql.createConnection({
 })
 */
 
-
-  const con = mysql.createConnection({
+//old code
+  /*const con = mysql.createConnection({
      host: "lms.cnicycuoaqou.eu-north-1.rds.amazonaws.com",
      user: "admin",
      password: "jeevanganesh",
      database: "dashboard",
      port: 3306
- })
+ })*/
 
-
+ const pool = mysql.createPool({
+     host: "lms.cnicycuoaqou.eu-north-1.rds.amazonaws.com",
+     user: "admin",
+     password: "jeevanganesh",
+     database: "dashboard",
+     port: 3306,
+     waitForConnections: true,
+     connectionLimit: 10,
+     queueLimit: 0
+ });
 
 //----------------------------------------------------USER TABEL------------------------------------------------
 
@@ -106,7 +114,7 @@ const saltRounds = 10;
             return res.status(500).send("Error hashing password");
         }
 
-        con.query(
+        pool.query(
             'INSERT INTO doc_users (`created_by`,`updated_by`,`first_name`, `last_name`, `email`, `username`, `password_hash`, `phone`, `date_of_birth`, `gender`, `profile_picture`, `is_active`,`user_type`,`address`,`nationality`,`grade_level`, `admission_date`,`class_section` ,`course` ,`GPA` ,`attendance_percentage` ,`academic_status` ,`guardian_name` ,`guardian_phone` ,`guardian_email` ,`relationship`,`courses_enrolled` ,`credits_earned` ,`semester` ,`tuition_status` ,`blood_type` ,`medical_conditions` ,`emergency_contact_name` ,`emergency_contact_phone` ,`disciplinary_record` ,`clubs_and_activities` ,`sports_participation` ,`volunteer_hours` ,`last_login` ,`account_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [created_by,updated_by,first_name, last_name, email, username, hashedPassword, phone, date_of_birth, gender, profile_picture, is_active, user_type, address, nationality, grade_level, admission_date,class_section, course, GPA, attendance_percentage, academic_status, guardian_name, guardian_phone, guardian_email, relationship, courses_enrolled, credits_earned, semester, tuition_status, blood_type, medical_conditions, emergency_contact_name, emergency_contact_phone, disciplinary_record, clubs_and_activities, sports_participation, volunteer_hours, last_login, account_status], // Use hashedPassword
             (err, result) => {
@@ -204,7 +212,7 @@ app.post('/user/addDOCuser', (req, res) => {
             sports_participation, volunteer_hours, last_login, account_status,roll_num
         ];
 
-        con.query(sql, values, (err, result) => {
+        pool.query(sql, values, (err, result) => {
             if (err) {
                 console.error("Database error:", err);
                 return res.status(500).send("Database error");
@@ -222,7 +230,7 @@ app.post('/user/login', (req, res) => {
     const { username, password_hash } = req.body;
 
     // Fetch user from the database
-    con.query(
+    pool.query(
         'SELECT username, id, password_hash FROM doc_users WHERE is_active = "Y" AND username = ?', 
         [username], 
         (err, results) => {
@@ -267,7 +275,7 @@ app.get('/user/getById/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `roll_num`, `is_active` FROM doc_users WHERE is_active = "Y" AND id = ?', 
+ pool.query('SELECT `id`, `first_name`, `last_name`, `created_by`, `updated_by`, `email`, `username`, `phone`, `date_of_birth`, `gender`, `roll_num`, `is_active` FROM doc_users WHERE is_active = "Y" AND id = ?', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -305,7 +313,7 @@ app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
         params.push(class_section);
     }
 
-    con.query(sql, params, (err, result) => {
+    pool.query(sql, params, (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).json({ error: "Database error" });
@@ -324,7 +332,7 @@ app.get('/user/getUsers',(req,res) => {
     const id=req.params.id;
 
 
- con.query(	`SELECT id, created_by, updated_by, first_name, last_name, email, phone, 
+ pool.query(	`SELECT id, created_by, updated_by, first_name, last_name, email, phone, 
 	               date_of_birth, gender, profile_picture, is_active, user_type, address, 
 	               nationality, grade_level, admission_date, class_section, course, GPA, 
 	               attendance_percentage, academic_status, guardian_name, guardian_phone, 
@@ -348,7 +356,7 @@ app.get('/user/getUsers',(req,res) => {
 // ----------------------API for dashbord------------------------
 app.get('/user/getUsersCount',(req,res) => {
 
- con.query(	`SELECT COUNT(*) AS totalUsers FROM doc_users
+ pool.query(	`SELECT COUNT(*) AS totalUsers FROM doc_users
 			WHERE  is_active = "Y"`, 
 (err, result) => {
         if(err){
@@ -363,7 +371,7 @@ app.get('/user/getUsersCount',(req,res) => {
 
 app.get('/user/getStudentsCount',(req,res) => {
 
- con.query(	`SELECT COUNT(*) AS numberOfStudents FROM doc_users
+ pool.query(	`SELECT COUNT(*) AS numberOfStudents FROM doc_users
 	WHERE user_type = "STUDENT"
 	AND  is_active = "Y"`, (err, result) => {
         if(err){
@@ -378,7 +386,7 @@ app.get('/user/getStudentsCount',(req,res) => {
 
 app.get('/user/getFacultyCount',(req,res) => {
 
- con.query(	`SELECT COUNT(*) AS numberOfFaculty FROM doc_users
+ pool.query(	`SELECT COUNT(*) AS numberOfFaculty FROM doc_users
 	WHERE user_type IN ("TEACHER","HOD","VP","PRINCIPAL")
 	AND  is_active = "Y"`, (err, result) => {
         if(err){
@@ -392,7 +400,7 @@ app.get('/user/getFacultyCount',(req,res) => {
 
 app.get('/user/getStaffCount',(req,res) => {
 
- con.query(	`	SELECT COUNT(*) AS numberOfStaff FROM doc_users
+ pool.query(	`	SELECT COUNT(*) AS numberOfStaff FROM doc_users
 		WHERE user_type = "STAFF"
 		AND  is_active = "Y"`, (err, result) => {
         if(err){
@@ -407,7 +415,7 @@ app.get('/user/getStaffCount',(req,res) => {
 
 app.get('/user/getUserTypeCount',(req,res) => {
 
- con.query(	`SELECT user_type, COUNT(*) AS COUNT
+ pool.query(	`SELECT user_type, COUNT(*) AS COUNT
 	FROM doc_users
 	WHERE is_active = "Y"
 	GROUP BY user_type;`, (err, result) => {
@@ -421,7 +429,7 @@ app.get('/user/getUserTypeCount',(req,res) => {
 
 app.get('/user/getStudentsPerSemCount',(req,res) => {
 
- con.query(	`	select semester, COUNT(*) AS count
+ pool.query(	`	select semester, COUNT(*) AS count
 	from doc_users
 	where is_active = "Y"
 	and user_type = 'STUDENT'
@@ -444,7 +452,7 @@ app.put('/user/deleteUserById/:id', (req, res) => {
         return res.status(400).json({ message: "User ID is required" });
     }
 
-    con.query(
+    pool.query(
         'UPDATE doc_users SET is_active = "N" WHERE id = ?', 
         [id], 
         (err, result) => {
@@ -468,7 +476,7 @@ app.put('/user/deleteUserById/:id', (req, res) => {
 
 app.get('/feature/getFeature',(req,res) => {
 
- con.query('SELECT `id`, `feature_name`, `feature_description`, `feature_url`, `display_sequence`, `parent_feature_id`, `icon` FROM features WHERE is_active = "Y"', 
+ pool.query('SELECT `id`, `feature_name`, `feature_description`, `feature_url`, `display_sequence`, `parent_feature_id`, `icon` FROM features WHERE is_active = "Y"', 
 (err, result) => {
         if(err){
             console.log(err)
@@ -531,7 +539,7 @@ app.put('/update/:id', (req, res) => {
                     is_active = ? 
                 WHERE usr_id = ?`;
 
-    con.query(sql, [FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, country, state, city, zip, is_active, id], (err, result) => {
+    pool.query(sql, [FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, country, state, city, zip, is_active, id], (err, result) => {
         if (err) {
             console.error("Error updating user:", err);
             res.status(500).send("An error occurred while updating the record.");
@@ -558,7 +566,7 @@ app.post('/income/add', (req, res) => {
         VALUES (?, ?, ?, ?, ?)
     `;
 
-    con.query(query, [usr_id, month_of_receipt, income_type, amount, notes], (err, result) => {
+    pool.query(query, [usr_id, month_of_receipt, income_type, amount, notes], (err, result) => {
         if (err) {
             console.error('Error inserting income:', err);
             return res.status(500).json({ error: 'Database error' });
@@ -576,7 +584,7 @@ app.get('/income/data/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT * FROM income WHERE usr_id = ?', 
+ pool.query('SELECT * FROM income WHERE usr_id = ?', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -591,7 +599,7 @@ app.delete('/income/delete/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('DELETE FROM income WHERE usr_id = ?', 
+ pool.query('DELETE FROM income WHERE usr_id = ?', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -606,7 +614,7 @@ app.delete('/incomeid/delete/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('DELETE FROM income WHERE income_id = ?', 
+ pool.query('DELETE FROM income WHERE income_id = ?', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -632,7 +640,7 @@ app.put('/update/incomeid/:id', (req, res) => {
                     amount = ?
                 WHERE income_id = ?`;
 
-    con.query(sql, [income_type, month_of_receipt, amount, income_id], (err, result) => {
+    pool.query(sql, [income_type, month_of_receipt, amount, income_id], (err, result) => {
 		    if (err) {
 		        console.error("Error updating user:", err);
 		        res.status(500).send("An error occurred while updating the record.");
@@ -649,7 +657,7 @@ app.put('/update/incomeid/:id', (req, res) => {
 app.get('/income_types/data',(req,res) => {
 
 
- con.query('SELECT * FROM income_type',(err, result) => {
+ pool.query('SELECT * FROM income_type',(err, result) => {
         if(err){
             console.log(err)
         }else{
@@ -665,7 +673,7 @@ app.get('/income/groupBy/month/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT month_of_receipt, SUM(amount) AS total_amount FROM income where usr_id=? GROUP BY month_of_receipt ORDER BY total_amount desc', 
+ pool.query('SELECT month_of_receipt, SUM(amount) AS total_amount FROM income where usr_id=? GROUP BY month_of_receipt ORDER BY total_amount desc', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -681,7 +689,7 @@ app.get('/income/groupBy/incomeType/:id',(req,res) => {
     const id=req.params.id;
 
 
- con.query('SELECT income_type, SUM(amount) AS total_amount FROM income where usr_id=? GROUP BY income_type ORDER BY total_amount desc', 
+ pool.query('SELECT income_type, SUM(amount) AS total_amount FROM income where usr_id=? GROUP BY income_type ORDER BY total_amount desc', 
  [id], (err, result) => {
         if(err){
             console.log(err)
@@ -704,7 +712,7 @@ app.get('/income/groupBy/incomeType/:id',(req,res) => {
 
 //--------------------------- test --------------------------
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
     res.send("Server is working");
 });
 
@@ -718,11 +726,24 @@ app.listen(3002,(err) => {
 })
 
 
-con.connect((err) => {
+pool.connect((err) => {
     if(err){
         console.log(err)
     }else{
         console.log("connected!!")
     }
-})
+})*/
+
+app.get('/', (req, res) => {
+    res.send("Server is working");
+});
+
+app.listen(3002, (err) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log("Server running on port 3002");
+    }
+});
+
 //---------------------------test End---------------------------

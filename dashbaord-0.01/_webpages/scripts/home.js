@@ -217,14 +217,14 @@ function createIncomeChart(){
 
 
 function createUserChart(){
-	strURL = request_url + "/user/getStudentsPerSemCount";
-	userCountPerSem = getAPIdata(strURL);
+	strURL = request_url + "/user/getUserTypeCount";
+	userTypesCount = getAPIdata(strURL);
 	
-	if(userCountPerSem != null && userCountPerSem != "" && userCountPerSem != undefined){
+	if(userTypesCount != null && userTypesCount != "" && userTypesCount != undefined){
 		
 		_.each(userTypesCount, function(item){
-			userCountPerSemCount.push(item.count);
-			semCount.push(item.semester);
+			userTypeCount.push(item.COUNT);
+			userType.push(item.user_type);
 		});
 			
 		//Charts
@@ -365,20 +365,20 @@ function createUserChart(){
 		      data: userTypeCount,
 		      borderWidth: 0.8,
 		      backgroundColor: 			  [
-			    '#DC3535FF', // Bold Red
-			    '#FFB200FF', // Bright Orange-Yellow
-			    '#FF4949FF', // Light Red
-			    '#E8AA42FF', // Golden Orange
-			    '#CD104DFF', // Deep Pink-Red
-			    '#2B2D42FF'  // Dark Blue-Grey (a cool contrast to the warm tones)
+				'#1f77b4', // Students
+				'#ff7f0e', // Teachers
+				'#2ca02c', // Staff
+				'#d62728', // Admin
+				'#9467bd', // Support
+				'#8c564b'  // Guests
 			  ],
 		      borderColor:[
-			  '#DC3535FF', // Bold Red
-			  '#FFB200FF', // Bright Orange-Yellow
-			  '#FF4949FF', // Light Red
-			  '#E8AA42FF', // Golden Orange
-			  '#CD104DFF', // Deep Pink-Red
-			  '#2B2D42FF'  // Dark Blue-Grey (a cool contrast to the warm tones)
+				'#1f77b4', // Students
+				'#ff7f0e', // Teachers
+				'#2ca02c', // Staff
+				'#d62728', // Admin
+				'#9467bd', // Support
+				'#8c564b'  // Guests
 			],
 		    }]
 		  };
@@ -491,16 +491,25 @@ function createUserChart(){
 
 
 function createStudentEnrolledBySem(){
-	
-	
+
+	strURL = request_url + "/user/getStudentsPerSemCount";
+	userCountPerSem = getAPIdata(strURL);
+
+	if(userCountPerSem != null && userCountPerSem != "" && userCountPerSem != undefined){
+		
+		_.each(userCountPerSem, function(item){
+			userCountPerSemCount.push(item.count);
+			semCount.push(item.semester);
+		});	
+		
 	 const ct3 = document.getElementById('ProductionEffiChart').getContext('2d'); // Corrected to get the 2D context
 
 	const prodEffiData = {
-	    labels: ['Primary Forming', 'Pre-Heating', 'Iron Making', 'Cooling and Final Grinding', 'Primary Steel Making', 'Continuous Casting'],
+	    labels: semCount,
 	    datasets: [
 	        {
 	            label: 'Student Count',
-	            data: [201.33,200.85,196.07,197.77,194.33,191.90],
+	            data: userCountPerSemCount,
 	            backgroundColor: 'rgb(205, 16, 76)',
 	            maxBarThickness: 25,
 	        },
@@ -518,7 +527,7 @@ function createStudentEnrolledBySem(){
 	        legend: {
 	            display: false
 	        },
-	        tooltip: {
+	       /* tooltip: {
 	            backgroundColor: 'white',
 	            bodyColor: 'black',
 	            titleColor: 'black',
@@ -533,9 +542,9 @@ function createStudentEnrolledBySem(){
 	                }
 	            },
 	            displayColors: false
-	        },
+	        },*/
 	        datalabels: {
-				display:false,
+				display:true ,
 	            anchor: 'end',
 	            align: 'end',
 	            color: 'black',
@@ -548,20 +557,36 @@ function createStudentEnrolledBySem(){
 	    indexAxis: 'y',
 	    scales: {
 	        x: {
-	            stacked: true
+	            stacked: true,
+				title: {
+				    display: true,
+				    text: 'Number Of Students',
+					font: {
+					 weight: 'bold', // Makes the X-axis label bold
+					 size: 14        // Optional: change font size
+					}						
+				}
 	        },
 	        y: {
 	            stacked: true,
 	            grid:{
 					display:false,
-				}
+				},
+				title: {
+					display: true,
+					text: 'Semister',
+					font: {
+					 weight: 'bold', // Makes the X-axis label bold
+					 size: 14        // Optional: change font size
+					}					
+				}				
 	        }
 	    },
 	    layout: {
 	        padding: {
 	            top: 25,
 	            bottom: 10,
-	            right: 10,
+	            right: 15,
 	            left: 10
 	        }
 	    }
@@ -571,7 +596,7 @@ function createStudentEnrolledBySem(){
 	    type: 'bar',
 	    data: prodEffiData,
 	    options: prodEffiOptions,
-	    /*plugins: [{
+	    plugins: [{
 	        beforeInit: function (chart) {
 	            // Ensure we're applying the legend to the right chart
 	            if (chart.canvas.id === "ProductionEffiChart") {
@@ -580,7 +605,7 @@ function createStudentEnrolledBySem(){
 	                    let icon = 'bar_chart';
 	                    let color = 'black';
 
-	                    if (dataset.label === "Runtime Hours") {
+	                    if (dataset.label === "Student Count") {
 	                        color = 'rgb(205, 16, 76)';
 	                    } else if (dataset.label === "Downtime Hours") {
 	                        color = '#ffc107ff';
@@ -598,6 +623,8 @@ function createStudentEnrolledBySem(){
 	                document.getElementById("legend3").appendChild(ul);
 	            }
 	        }
-	    }]*/
+	    }]
 	});
+
+	}	
 }

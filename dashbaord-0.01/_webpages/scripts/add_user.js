@@ -20,9 +20,6 @@ setUsrName()
 userTemplate = $("#listTmpl").html();
 
 	
-usrData = [];
-$("#listContainer2").html(_.template(userTemplate, usrData));
-$('#listContainer2').trigger("create");	
 
 /*	
 	
@@ -66,20 +63,6 @@ function search(){
 function addUser(){
 	location.href = 'add_user.html';
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

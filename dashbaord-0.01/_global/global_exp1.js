@@ -60,7 +60,7 @@ function userLogin() {
 }
 
 function onUserLoginSuccess(response) {
-		alert("Login Successful.")
+		//alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
 		sessionStorage.setItem("USERNAME",response.username)
 		location.href = "_webpages/home.html"
