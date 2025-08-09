@@ -1,5 +1,7 @@
 var parentFeatures;
 $(function(){
+	
+	sessionStorage.setItem("MENU_COLLAPSE","FULL")
 
 	strURL = request_url + "/feature/getFeature";
 	features = getAPIdata(strURL)

@@ -91,32 +91,37 @@ label {
 
 <body>
 					
-<nav class="navbar ">
-  <div class="container-fluid d-flex justify-content-between mainNav">
-    <!-- Left-aligned icon -->
-    <a class="navbar-brand" href="home.html">
-      <img src="../_global/css/images/logo2.png" alt="Logo" width="100%" height="40">
-    </a>
-
-    <div>
-		<div class="btn-group dropleft">
-		  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userName">
-		  </button>
-		  <div class="dropdown-menu">
-    		<a class="dropdown-item" href="#">Profile</a>
-    		<a class="dropdown-item" onclick="functionLogout()">Logout</a>
-		  </div>
-		</div>			
-			
+<nav class="navbar">
+  <div class="container-fluid d-flex justify-content-between align-items-center mainNav">
+    
+    <!-- Left: Logo + Menu -->
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand m-0" href="home.html">
+        <img src="../_global/css/images/logo2.png" alt="Logo" height="40">
+      </a>
+      <i class="material-icons ml-2" style="cursor:pointer;font-size: 28px; color:white;" onclick="collapseMenu()">menu</i>
     </div>
+    
+    <!-- Right: User Dropdown -->
+    <div>
+      <div class="btn-group dropleft">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userName">
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" onclick="functionLogout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  
   </div>
-</nav> 
+</nav>
 
 
   
   <div class="row" >
     
-    <div class="col-sm-2 ">
+    <div class="col-sm-2 sideMenuDivCol ">
    
   <div id="menuContainer" style="overflow-y:auto;">
 	<script type="text/template" id="menuTmpl">
@@ -159,525 +164,209 @@ label {
  <div class="sectionDiv">   
  
  
- <ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Basic</a>
-  </li>
-  <li class="nav-item">
-   <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-  </li>
-  <li class="nav-item">
-   <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
-  </li>
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item"><a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab">Basic</a></li>
+  <li class="nav-item"><a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab">Contact</a></li>
+  <li class="nav-item"><a class="nav-link" id="address-tab" data-toggle="tab" href="#address" role="tab">Address</a></li>
+  <li class="nav-item"><a class="nav-link" id="guardian-tab" data-toggle="tab" href="#guardian" role="tab">Guardian</a></li>
+  <li class="nav-item"><a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab">Profile</a></li>
+  <li class="nav-item"><a class="nav-link" id="course-tab" data-toggle="tab" href="#course" role="tab">Course</a></li>
 </ul>
+
 <div class="tab-content border" id="myTabContent">
-  
-  
-  
-  <!-- ******************************************BASIC DETAILS ******************************************-->
-  
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="margin:17px 27px 27px 27px; overflow-y: auto;">
-  
+
+  <!-- BASIC DETAILS -->
+  <div class="tab-pane fade show active" id="home" role="tabpanel" style="margin:17px;">
+    <table width="100%">
+      <tr>
+        <td width="20%"><div class="form-group">First Name <input type="text" name="first_name" required></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Last Name <input type="text" name="last_name" required></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Roll Number <input type="text" name="roll_num" required></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Grade Level <input type="text" name="grade_level"></div></td>
+      </tr>
+      <tr>
+        <td><div class="form-group">Date of Birth <input type="date" name="date_of_birth"></div></td>
+        <td></td>
+        <td>
+          <div class="form-group">Gender
+            <select name="gender">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </td>
+        <td></td>
+        <td>
+          <div class="form-group">User Type
+			<select id="userType" name="userType">
+				              <script id="userTypeTmpl" type="text/template"> 
+									<option value="">-- Select User Type --</option>
+										<%_.each(userType.details, function(item){ %>
+											<option value="<%= item.value1%>"><%= item.value1%></option>									
+										 <% }); %>
+								</script> 
+			</select>
+          </div>
+        </td>
+        <td></td>
+        <td><div class="form-group">Nationality <input type="text" name="nationality"></div></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:top;"><div class="form-group">Blood Type 
+			<select name="blood_type" id="blood_type" required>
+			    <option value="">-- Select Blood Type --</option>
+			    <option value="A+">A+</option>
+			    <option value="A-">A-</option>
+			    <option value="B+">B+</option>
+			    <option value="B-">B-</option>
+			    <option value="O+">O+</option>
+			    <option value="O-">O-</option>
+			    <option value="AB+">AB+</option>
+			    <option value="AB-">AB-</option>
+			</select>
+		</div></td>
+
+        <td></td>
+
+        <td ><div class="form-group">Medical Conditions <br><textarea name="medical_conditions" rows="2"></textarea></div></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- CONTACT DETAILS -->
+  <div class="tab-pane fade" id="contact" role="tabpanel" style="margin:17px;">
+    <table width="100%">
+      <tr>
+        <td width="20%"><div class="form-group">Email <input type="email" name="email" required></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Phone <input type="tel" name="phone"></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Username <input type="text" name="username" required></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Password <input type="password" name="password_hash" required></div></td>
+      </tr>
+      <tr>
+        <td><div class="form-group">Emergency Contact Name <input type="text" name="emergency_contact_name"></div></td>
+        <td></td>
+        <td><div class="form-group">Emergency Contact Phone <input type="tel" name="emergency_contact_phone"></div></td>
+        <td></td>
+        <td><div class="form-group">Last Login <input type="datetime-local" name="last_login"></div></td>
+        <td></td>
+        <td>
+          <div class="form-group">Account Status
+            <select name="account_status">
+              <option>Active</option>
+              <option>Suspended</option>
+              <option>Pending</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+<!-- ADDRESS DETAILS -->
+<div class="tab-pane fade" id="address" role="tabpanel" style="margin:17px;">
   <table width="100%">
-  	<tr>
-  		<td width="25%">
-	      <div class="form-group">
-	     First Name
-	      <input type="text" name="first_name" required>
-	      </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-	    <div class="form-group">
-	      Last Name
-	      <input type="text" name="last_name" required>
-	    </div>		
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
-  	
-  	
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
- 
- 
- <tr>
-  		<td width="25%">
-    <div class="form-group">
-      Roll Number
-      <input type="text" name="roll_num" required>
-    </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-    <div class="form-group">
-      Grade Level
-      <input type="text" name="grade_level">
-    </div>	
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
- 
- <tr>
-  		<td width="25%">
-    <div class="form-group">
-      Email
-      <input type="email" name="email" required>
-    </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-
-  <div class="form-group">
-    Phone
-    <input type="tel" name="phone">
-  </div>  		
-  		
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
- 
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
- 
- 
- 
-  <tr>
-  		<td width="25%">
-    <div class="form-group">
-      Username
-      <input type="text" name="username" required>
-    </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-
-  <div class="form-group">
-    Password
-    <input type="password" name="password_hash" required>
-  </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
- 
- 
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
-  
-  
-  
-  
-  <tr>
-  		<td width="25%">
-<div class="form-group">
-      Date of Birth
-      <input type="date" name="date_of_birth">
-    </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-
- <div class="form-group">
-      Gender
-      <select name="gender">
-        <option value="">Select</option>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-    </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
-  
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
- 
- 
-  <tr>
-  		<td width="25%">
-			<div class="form-group">
-			    User Type
-			    <select name="user_type">
-			      <option value="">Select</option>
-			      <option>Student</option>
-			      <option>Teacher</option>
-			      <option>Admin</option>
-			    </select>
-			  </div>
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%" rowspan="3">
-
-		 <div class="form-group">
-		    Address
-		    <textarea name="address" ></textarea>
-		  </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>
-
- 
-  <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
-  
-  
-   <tr>
-  		<td width="25%">
-  <div class="form-group">
-    Nationality
-    <input type="text" name="nationality">
-  </div>
-
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%" rowspan="1">
-    <div class="form-group">
-      Admission Date
-      <input type="date" name="admission_date">
-    </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr> 
-  
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
-  
-  
-   <tr>
-  		<td width="25%">
-    <div class="form-group">
-      Class Section
-      <input type="text" name="class_section">
-    </div>
-
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%" rowspan="1">
-  <div class="form-group">
-    Course
-    <input type="text" name="course">
-  </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr> 
- 
- 
-   <tr style="height:10px">
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-		<td width="5%"></td>
-  		<td width="25%"></td>
-</tr>  
-  
-  
-   <tr>
-  		<td width="25%">
-  <div class="form-group">
-    GPA
-    <input type="number" name="GPA" step="0.01">
-  </div>
-
-  		</td>
-
-
-			<td width="5%"></td>
-
-  		<td width="25%" rowspan="1">
-  <div class="form-group">
-    Attendance Percentage
-    <input type="number" name="attendance_percentage" step="0.01">
-  </div>
-  		</td>
-
-			<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-
-		<td width="5%"></td>
-
-  		<td width="25%">
-  		</td>
-  	</tr>	
- 
- 
-  
-  
+    <tr>
+      <td width="20%">
+        <div class="form-group">Address <textarea name="address"></textarea></div>
+      </td>
+      <td width="5%"></td>
+      <td width="20%">
+        <div class="form-group">State <input type="text" name="state"></div>
+      </td>
+      <td width="5%"></td>
+      <td width="20%">
+        <div class="form-group">Country <input type="text" name="country"></div>
+      </td>
+      <td width="5%"></td>
+      <td width="20%">
+        <div class="form-group">Pincode <input type="text" name="pincode"></div>
+      </td>
+    </tr>
   </table>
-  
-  
-  </div>
-  
-   <!-- ******************************************CONTACT DETAILS ******************************************-->
-    
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-  
-    <!-- ******************************************PROFILE DETAILS ******************************************-->
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
 </div>
+
+
+  <!-- GUARDIAN DETAILS -->
+  <div class="tab-pane fade" id="guardian" role="tabpanel" style="margin:17px;">
+    <table width="100%">
+      <tr>
+        <td width="20%"><div class="form-group">Guardian Name <input type="text" name="guardian_name"></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Guardian Phone <input type="tel" name="guardian_phone"></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Guardian Email <input type="email" name="guardian_email"></div></td>
+        <td width="5%"></td>
+        <td width="20%"><div class="form-group">Relationship <input type="text" name="relationship"></div></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PROFILE DETAILS -->
+  <div class="tab-pane fade" id="profile" role="tabpanel" style="margin:17px;">
+    <table width="100%">
+      <tr>
+        <td width="25%"><div class="form-group">GPA <input type="number" name="GPA" step="0.01"></div></td>
+        <td width="5%"></td>
+        <td width="25%"><div class="form-group">Attendance Percentage <input type="number" name="attendance_percentage" step="0.01"></div></td>
+        <td width="5%"></td>
+        <td width="25%"><div class="form-group">Academic Status <input type="text" name="academic_status"></div></td>
+      </tr>
+      <tr>
+        <td><div class="form-group">Disciplinary Record <textarea name="disciplinary_record" rows="2"></textarea></div></td>
+        <td></td>
+        <td><div class="form-group">Clubs and Activities <textarea name="clubs_and_activities" rows="2"></textarea></div></td>
+        <td></td>
+        <td><div class="form-group">Sports Participation <textarea name="sports_participation" rows="2"></textarea></div></td>
+      </tr>
+      <tr>
+        <td><div class="form-group">Volunteer Hours <input type="number" name="volunteer_hours"></div></td>
+        <td></td>
+        <td width="25%"><div class="form-group">Class Section <input type="text" name="class_section"></div></td>
+        
+      </tr>
+    </table>
+  </div>
+
+  <!-- COURSE DETAILS -->
+  <div class="tab-pane fade" id="course" role="tabpanel" style="margin:17px;">
+    <table width="100%">
+      <tr>
+        <td width="25%"><div class="form-group">Course <input type="text" name="course"></div></td>
+        <td width="5%"></td>
+        <td width="25%"><div class="form-group">Courses Enrolled <textarea name="courses_enrolled" rows="2"></textarea></div></td>
+        <td width="5%"></td>
+        <td width="25%"><div class="form-group">Credits Earned <input type="number" name="credits_earned"></div></td>
+      </tr>
+      <tr>
+        <td><div class="form-group">Semester <input type="text" name="semester"></div></td>
+        <td></td>
+        <td>
+          <div class="form-group">Tuition Status
+            <select name="tuition_status">
+              <option>Paid</option>
+              <option>Unpaid</option>
+              <option>Partial</option>
+            </select>
+          </div>
+        </td>
  
- 
- <form method="POST" action="/submit-form" enctype="multipart/form-data">
-
-
-
- 
-
-  <div class="form-group">
-    Academic Status
-    <input type="text" name="academic_status">
+ 		<td></td>     
+         <td width="25%"><div class="form-group">Admission Date <input type="date" name="admission_date"></div></td>
+          
+        
+      </tr>
+    </table>
   </div>
 
-  <div class="form-group">
-    Guardian Name
-    <input type="text" name="guardian_name">
-  </div>
-
-  <div class="form-row">
-    <div class="form-group">
-      Guardian Phone
-      <input type="tel" name="guardian_phone">
-    </div>
-    <div class="form-group">
-      Guardian Email
-      <input type="email" name="guardian_email">
-    </div>
-  </div>
-
-  <div class="form-group">
-    Relationship
-    <input type="text" name="relationship">
-  </div>
-
-  <div class="form-group">
-    Courses Enrolled
-    <textarea name="courses_enrolled" rows="2"></textarea>
-  </div>
-
-  <div class="form-group">
-    Credits Earned
-    <input type="number" name="credits_earned">
-  </div>
-
-  <div class="form-group">
-    Semester
-    <input type="text" name="semester">
-  </div>
-
-  <div class="form-group">
-    Tuition Status
-    <select name="tuition_status">
-      <option>Paid</option>
-      <option>Unpaid</option>
-      <option>Partial</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    Blood Type
-    <input type="text" name="blood_type">
-  </div>
-
-  <div class="form-group">
-    Medical Conditions
-    <textarea name="medical_conditions" rows="2"></textarea>
-  </div>
-
-  <div class="form-group">
-    Emergency Contact Name
-    <input type="text" name="emergency_contact_name">
-  </div>
-
-  <div class="form-group">
-    Emergency Contact Phone
-    <input type="tel" name="emergency_contact_phone">
-  </div>
-
-  <div class="form-group">
-    Disciplinary Record
-    <textarea name="disciplinary_record" rows="2"></textarea>
-  </div>
-
-  <div class="form-group">
-    Clubs and Activities
-    <textarea name="clubs_and_activities" rows="2"></textarea>
-  </div>
-
-  <div class="form-group">
-    Sports Participation
-    <textarea name="sports_participation" rows="2"></textarea>
-  </div>
-
-  <div class="form-group">
-    Volunteer Hours
-    <input type="number" name="volunteer_hours">
-  </div>
-
-  <div class="form-group">
-    Last Login
-    <input type="datetime-local" name="last_login">
-  </div>
-
-  <div class="form-group">
-    Account Status
-    <select name="account_status">
-      <option>Active</option>
-      <option>Suspended</option>
-      <option>Pending</option>
-    </select>
-  </div>
-</form>
+</div>
 
 
     

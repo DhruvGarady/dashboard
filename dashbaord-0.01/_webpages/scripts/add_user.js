@@ -1,6 +1,13 @@
 
 var usrData
 var userTemplate;
+
+var userType = {
+	details:[]
+}
+var genricData;
+var userTypeCode = '1000';
+
 $(document).ready(function() {
 
 /*	$("#dateReceived").datepicker({
@@ -19,7 +26,21 @@ setUsrName()
 
 userTemplate = $("#listTmpl").html();
 
-	
+var myTemplate = $("#userTypeTmpl").html();
+
+genricData = JSON.parse(sessionStorage.getItem("ENUM_VALUES"))
+
+userType = genricData.find( item => item.master_code == userTypeCode)
+
+if(userType == null || userType == undefined || userType == ""){
+	userType = {
+		details:[]
+	}	
+}
+
+$("#userType").html(_.template(myTemplate, userType.details));
+$('#userType').trigger("create");
+
 
 /*	
 	

@@ -26,7 +26,22 @@ buildMenu();
 setUsrName()
 
 
-	
+if(sessionStorage.getItem("ENUM_VALUES") == null || sessionStorage.getItem("ENUM_VALUES") == "" || sessionStorage.getItem("ENUM_VALUES") == undefined){ 
+strURL = request_url +"/enum/getEnumValues";
+genericData = getAPIdata(strURL);
+
+genericData = _.groupBy(genericData, function(item){
+	return item.master_code;	
+});
+genericData = _.map(genericData, function(item){
+	return{
+		master_code: item[0].master_code,
+		master_name: item[0].master_name,
+		details: item
+	}
+})
+sessionStorage.setItem("ENUM_VALUES",JSON.stringify(genericData))
+}	
 
 strURL = request_url + "/user/getUsersCount";
 userCount = getAPIdata(strURL);

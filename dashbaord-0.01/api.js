@@ -260,7 +260,7 @@ app.post('/user/login', (req, res) => {
 
                 // Set session variables with the correct database username
                 req.session.username = username; // Set session username to the username from the DB
-                req.session.userId = userId; // Set session userId to the userId from the DB
+                req.session.userId = userId; //e Set session userId to the userId from the DB
 
                 res.json({ user_id: userId, username: username });
             });
@@ -487,6 +487,19 @@ app.get('/feature/getFeature',(req,res) => {
 })
 
 
+//-----------------------------------------------------------------------Feature table----------------------------------------------------------------------
+app.get('/enum/getEnumValues',(req,res) => {
+
+ pool.query(`SELECT * FROM enum_values
+			WHERE  is_active = "Y"`, 
+(err, result) => {
+        if(err){
+            console.log(err)
+        }else{
+			res.json(result);
+        }
+    })
+})
 
 
 

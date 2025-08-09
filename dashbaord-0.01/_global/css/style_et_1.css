@@ -163,12 +163,12 @@ padding-left: 3%;
  }
  .form-group{
  	display: block; 
- 	margin-bottom: 0.0rem;
+    margin-bottom: 1rem;
  	font-weight:400;
  	font-size: 14px;
  }
 
- select, input {
+ select, input,textarea {
   width: 100%;
   padding: 8px 6px;
   font-size: .825rem;
@@ -190,7 +190,7 @@ select option {
 }
  
  
- .sectionDiv{
+ .sectionDivHead{
  	background-color:white;
  	padding:10px;
  	padding-bottom:20px;
@@ -199,6 +199,19 @@ select option {
 	/* margin-left:10px; */
  	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
  	width:99%;
+ 	/* height:88vh; */
+ }
+ 
+  .sectionDiv{
+ 	background-color:white;
+ 	padding:10px;
+ 	padding-bottom:20px;
+ 	padding-top:20px;
+ 	padding-left: 20px;
+	/* margin-left:10px; */
+ 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ 	width:99%;
+ 	height:88vh;
  }
  
 label {
@@ -323,5 +336,17 @@ label {
 
 /* TOOLTIP END */
 
+.nav-link{
+	color:black;
+}
 
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link:hover {
+    outline: none;
+    box-shadow: none;
+}
 
+.nav-tabs .nav-link {
+    outline: none !important;
+    box-shadow: none !important;
+}

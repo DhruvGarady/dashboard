@@ -46,32 +46,36 @@ body{
 
 <body>
 					
-<nav class="navbar ">
-  <div class="container-fluid d-flex justify-content-between mainNav">
-    <!-- Left-aligned icon -->
-    <a class="navbar-brand" href="home.html">
-      <img src="../_global/css/images/logo2.png" alt="Logo" width="100%" height="40">
-    </a>
-
-    <div>
-		<div class="btn-group dropleft">
-		  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userName">
-		  </button>
-		  <div class="dropdown-menu">
-    		<a class="dropdown-item" href="#">Profile</a>
-    		<a class="dropdown-item" onclick="functionLogout()">Logout</a>
-		  </div>
-		</div>			
-			
+<nav class="navbar">
+  <div class="container-fluid d-flex justify-content-between align-items-center mainNav">
+    
+    <!-- Left: Logo + Menu -->
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand m-0" href="home.html">
+        <img src="../_global/css/images/logo2.png" alt="Logo" height="40">
+      </a>
+      <i class="material-icons ml-2" style="cursor:pointer;font-size: 28px; color:white;" onclick="collapseMenu()">menu</i>
     </div>
+    
+    <!-- Right: User Dropdown -->
+    <div>
+      <div class="btn-group dropleft">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userName">
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" onclick="functionLogout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  
   </div>
-</nav> 
-
+</nav>
 
   
   <div class="row" >
     
-    <div class="col-sm-2 ">
+    <div class="col-sm-2 sideMenuDivCol ">
    
   <div id="menuContainer" style="overflow-y:auto;">
 	<script type="text/template" id="menuTmpl">
@@ -111,7 +115,7 @@ body{
     
     
  
- <div class="sectionDiv">   
+ <div class="sectionDivHead">   
  
  		<table width="98%">
 			<tr>
@@ -122,9 +126,9 @@ body{
 		<table width="99%">
 	
 	<tr>
-		<td width="10%">	
-		<div class="">
-			<label class="form-group">User Type:</label>
+		<td width="10%" style="vertical-align:bottom;">	
+		<div class="form-group" style="margin-bottom:none;">
+			User Type:
 			<select id="userType" name="userType" style="width:100%">
 			  <option value="">Select</option>
 			  <option value="PRINCIPAL">PRINCIPAL</option>
@@ -134,15 +138,14 @@ body{
 			  <option value="STAFF">STAFF</option>
 			  <option value="STUDENT">STUDENT</option>
 			</select>		  
-		  
 		</div>
 		</td>
 	
 		<td width="2%"></td>
 		
-		<td width="10%">	
-		<div class="">
-			<label class="form-group">Section:</label>
+		<td width="10%" style="vertical-align:bottom;">	
+		<div class="form-group" style="margin-bottom:none;">
+			Section:
 			<select id="Section" name="Section" style="width:100%">
 			  <option value="">Select</option>
 			  <option value="PRINCIPAL">PRINCIPAL</option>
@@ -159,13 +162,13 @@ body{
 			
 		<td width="2%"></td>
 		
-		<td width="20px" style="vertical-align:bottom;">	
+		<td width="20px" style="vertical-align:middle;">	
 			<input type="button" value="Search" onclick="search()" class="search">	  	
 		</td>			
 
 		<td width="30%"></td>
 
-		<td width="20px" style="vertical-align:bottom;text-align:right;">	
+		<td width="20px" style="vertical-align:middle;text-align:right;">	
 			<div class="tooltip-wrapper">
 			  <input type="button" value="+" onclick="addUser()" class="actionButton">
 			  <div class="tooltip-text">Add new user</div>
