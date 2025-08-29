@@ -1,6 +1,25 @@
 
 var usrData
 var userTemplate;
+
+
+var genricData;
+
+var userType = {
+	details:[]
+}
+var semester = {
+	details:[]
+}
+var section = {
+	details:[]
+}
+
+var userTypeCode = '1000';
+var semesterCode = '2000';
+var sectionCode = '2001';
+
+
 $(document).ready(function() {
 
 /*	$("#dateReceived").datepicker({
@@ -16,8 +35,55 @@ buildMenu();
 setUsrName()
 
 
-
 userTemplate = $("#listTmpl").html();
+
+
+
+var userTypeTemplate = $("#userTypeTmpl").html();
+var semesterTemplate = $("#semesterTmpl").html();
+var classSectionTemplate = $("#classSectionTmpl").html();
+
+genricData = JSON.parse(sessionStorage.getItem("ENUM_VALUES"))
+
+// -------------------------------- SECTION ------------------------------------
+section = genricData.find( item => item.master_code == sectionCode)
+if(section == null || section == undefined || section == ""){
+	section = {
+		details:[]
+	}	
+}
+$("#classSection").html(_.template(classSectionTemplate, section.details));
+$('#classSection').trigger("create");
+
+
+// --------------------------------USER TYPE ------------------------------------
+userType = genricData.find( item => item.master_code == userTypeCode)
+if(userType == null || userType == undefined || userType == ""){
+	userType = {
+		details:[]
+	}	
+}
+$("#userType").html(_.template(userTypeTemplate, userType.details));
+$('#userType').trigger("create");
+
+
+
+// --------------------------------SEMESTER------------------------------------
+semester = genricData.find( item => item.master_code == semesterCode)
+if(semester == null || semester == undefined || semester == ""){
+	semester = {
+		details:[]
+	}	
+}
+$("#semester").html(_.template(semesterTemplate, semester.details));
+$('#semester').trigger("create");
+
+
+
+
+
+
+
 
 	
 usrData = [];
@@ -46,18 +112,31 @@ $('#listContainer2').trigger("create");
 
 */
 	
-	
+search()
 	
 });
 
 
-function search(){
-	strURL = request_url + "/user/filter/"+ $("#userType").val() +"/"+ $("#Section").val();
+/*function search(){
+	strURL = request_url + "/user/filter/"+ $("#userType").val() +"/"+ $("#classSection").val() +"/"+ $("#semester").val();
 	usrData = getAPIdata(strURL);
 
 	$("#listContainer2").html(_.template(userTemplate, usrData));
 	$('#listContainer2').trigger("create");		
 
+}*/
+function search() {
+    const query = $.param({
+        user_type: $("#userType").val() || undefined,
+        class_section: $("#classSection").val() || undefined,
+        semester: $("#semester").val() || undefined,
+    });
+
+    const url = request_url + "/user/filter?"+query;
+	
+	usrData = getAPIdata(url);
+	$("#listContainer2").html(_.template(userTemplate, usrData));
+	$('#listContainer2').trigger("create");	
 }
 
 

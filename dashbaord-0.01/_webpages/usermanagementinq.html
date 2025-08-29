@@ -129,15 +129,14 @@ body{
 		<td width="10%" style="vertical-align:bottom;">	
 		<div class="form-group" style="margin-bottom:none;">
 			User Type:
-			<select id="userType" name="userType" style="width:100%">
-			  <option value="">Select</option>
-			  <option value="PRINCIPAL">PRINCIPAL</option>
-			  <option value="VP">VP</option>
-			  <option value="HOD">HOD</option>
-			  <option value="TEACHER">TEACHER</option>
-			  <option value="STAFF">STAFF</option>
-			  <option value="STUDENT">STUDENT</option>
-			</select>		  
+          <select id="userType" name="userType">
+            <script id="userTypeTmpl" type="text/template"> 
+				<option value="">ALL</option>
+              <%_.each(userType.details, function(item){ %>
+                <option value="<%= item.value1%>"><%= item.value1%></option>									
+              <% }); %>
+            </script> 
+          </select>	  
 		</div>
 		</td>
 	
@@ -146,19 +145,37 @@ body{
 		<td width="10%" style="vertical-align:bottom;">	
 		<div class="form-group" style="margin-bottom:none;">
 			Section:
-			<select id="Section" name="Section" style="width:100%">
-			  <option value="">Select</option>
-			  <option value="PRINCIPAL">PRINCIPAL</option>
-			  <option value="VP">VP</option>
-			  <option value="HOD">HOD</option>
-			  <option value="TEACHER">TEACHER</option>
-			  <option value="STAFF">STAFF</option>
-			  <option value="STUDENT">STUDENT</option>
-			</select>		  
+          <select id="classSection" name="classSection">
+            <script id="classSectionTmpl" type="text/template"> 
+              <option value="">ALL</option>
+              <%_.each(section.details, function(item){ %>
+                <option value="<%= item.value1%>"><%= item.value1%></option>									
+              <% }); %>
+            </script> 
+          </select>	  
 		  
 		</div>
 
 		</td>	
+		
+		<td width="2%"></td>
+		
+		<td width="10%" style="vertical-align:bottom;">	
+		<div class="form-group" style="margin-bottom:none;">
+			Semester:
+          <select id="semester" name="semester">
+            <script id="semesterTmpl" type="text/template"> 
+              <option value="">ALL</option>
+              <%_.each(semester.details, function(item){ %>
+                <option value="<%= item.value1%>"><%= item.value1%></option>									
+              <% }); %>
+            </script> 
+          </select>  
+		  
+		</div>
+
+		</td>			
+		
 			
 		<td width="2%"></td>
 		
@@ -170,7 +187,8 @@ body{
 
 		<td width="20px" style="vertical-align:middle;text-align:right;">	
 			<div class="tooltip-wrapper">
-			  <input type="button" value="+" onclick="addUser()" class="actionButton">
+			 <!--<input type="button" value="+" onclick="addUser()" class="actionButton">-->
+			    <input type="button" value="Add User" onclick="addUser()" class="search"> 
 			  <div class="tooltip-text">Add new user</div>
 			</div>
 		</td>
@@ -186,7 +204,7 @@ body{
 		<br>
 	
 
- <div class="sectionDiv" style="height:75%;">   	 
+ <div class="sectionDiv" style="">   	 
 	  
 	  
 	  <div id="listContainer2" class="tempalte">
@@ -194,23 +212,27 @@ body{
 
 		<table style="width:100%;" class="dataTbl">
 			  <tr>
-				<th width="3%">Roll Number</th>
-				<th width="7%">First Name</th>
-				<th width="7%">Last Name</th>
-				<th width="3%">Class Section</th>
-				<th width="7%">Course</th>
-				<th width="4%">Attendance %</th>
-				<th width="4%">Tuition Status</th>
-				<th width="1%">Edit</th>
-				<th width="2%" style="text-align:center;">Del</th>
+				<th width="5%">User Type</th>
+				<th width="5%">Roll No.</th>
+				<th width="10%">First Name</th>
+				<th width="10%">Last Name</th>
+				<th width="5%">Semester</th>
+				<th width="5%">Section</th>
+				<th width="8%">Course</th>
+				<th width="6%">Attendance(%)</th>
+				<th width="5%">Tuition Status</th>
+				<th width="3%">Edit</th>
+				<th width="3%" style="text-align:center;">Del</th>
 			  </tr>	
         
 	<%
 _.each(usrData, function(item){ %>
 			<tr>
+				<td><%= item.user_type %></td>
 				<td><%= item.roll_num %></td>
 				<td><%= item.first_name %></td>
 				<td><%= item.last_name %></td>
+				<td><%= item.semester %></td>
 				<td><%= item.class_section %></td>
 				<td><%= item.course %></td>
 				<td><%= item.attendance_percentage %></td>

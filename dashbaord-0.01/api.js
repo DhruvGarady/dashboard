@@ -172,7 +172,10 @@ app.post('/user/addDOCuser', (req, res) => {
         volunteer_hours,
         last_login,
         account_status,
-		roll_num
+		roll_num,
+		country,
+		state,
+		pincode
     } = req.body;
 
     // Check if required fields are provided
@@ -196,9 +199,9 @@ app.post('/user/addDOCuser', (req, res) => {
                 guardian_email, relationship, courses_enrolled, credits_earned, semester, 
                 tuition_status, blood_type, medical_conditions, emergency_contact_name, 
                 emergency_contact_phone, disciplinary_record, clubs_and_activities, 
-                sports_participation, volunteer_hours, last_login, account_status,roll_num
+                sports_participation, volunteer_hours, last_login, account_status,roll_num, country, state, pincode
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
@@ -209,7 +212,7 @@ app.post('/user/addDOCuser', (req, res) => {
             guardian_email, relationship, courses_enrolled, credits_earned, semester,
             tuition_status, blood_type, medical_conditions, emergency_contact_name,
             emergency_contact_phone, disciplinary_record, clubs_and_activities,
-            sports_participation, volunteer_hours, last_login, account_status,roll_num
+            sports_participation, volunteer_hours, last_login, account_status, roll_num, country, state, pincode
         ];
 
         pool.query(sql, values, (err, result) => {
@@ -285,11 +288,50 @@ app.get('/user/getById/:id',(req,res) => {
     })
 })
 
-//--------------------get users-------------------
+//--------------------Filter users-------------------
 
+app.get('/user/filter', (req, res) => {
+    const { user_type, class_section, semester } = req.query;
 
-app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
-    const { user_type, class_section } = req.params;
+    let sql = `SELECT id, created_by, updated_by, first_name, last_name, email, phone, 
+                   date_of_birth, gender, profile_picture, is_active, user_type, address, 
+                   nationality, grade_level, admission_date, class_section, course, GPA, 
+                   attendance_percentage, academic_status, guardian_name, guardian_phone, 
+                   guardian_email, relationship, courses_enrolled, credits_earned, semester, 
+                   tuition_status, blood_type, medical_conditions, emergency_contact_name, 
+                   emergency_contact_phone, disciplinary_record, clubs_and_activities, 
+                   sports_participation, volunteer_hours, last_login, account_status, roll_num 
+               FROM doc_users WHERE is_active = "Y"`;
+
+    const params = [];
+
+    if (user_type && user_type.toUpperCase() !== "ALL") {
+        sql += ` AND user_type = ?`;
+        params.push(user_type);
+    }
+
+    if (class_section && class_section.toUpperCase() !== "ALL") {
+        sql += ` AND class_section = ?`;
+        params.push(class_section);
+    }
+
+    if (semester && semester.toUpperCase() !== "ALL") {
+        sql += ` AND semester = ?`;
+        params.push(semester);
+    }
+
+    pool.query(sql, params, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+/*app.get('/user/filter/:user_type?/:class_section?/:semester?', (req, res) => {
+    const { user_type, class_section, semester } = req.params;
 
     let sql = `SELECT 	id, created_by, updated_by, first_name, last_name, email, phone, 
 		               date_of_birth, gender, profile_picture, is_active, user_type, address, 
@@ -303,16 +345,23 @@ app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
 					   
     const params = [];
 
-    if (user_type) {
-        sql += ` AND user_type = ?`;
-        params.push(user_type);
-    }
 
-    if (class_section) {
-        sql += ` AND class_section = ?`;
-        params.push(class_section);
-    }
+	if (user_type != "" && user_type != "ALL" && user_type != null && user_type != undefined) {
+	    sql += ` AND user_type = ?`;
+	    params.push(user_type);
+	}
 
+	if (class_section != "" && class_section != "ALL"  && class_section != null  && class_section != undefined ) {
+	    sql += ` AND class_section = ?`;
+	    params.push(class_section);
+	}
+
+	if (semester != "" && semester != "ALL" && semester != null && semester != undefined) {
+	    sql += ` AND semester = ?`;
+	    params.push(semester);
+	}
+
+	
     pool.query(sql, params, (err, result) => {
         if (err) {
             console.error(err);
@@ -322,11 +371,11 @@ app.get('/user/filter/:user_type?/:class_section?', (req, res) => {
         }
     });
 });
+*/
 
 
 
-
-
+//--------------------GET users-------------------
 
 app.get('/user/getUsers',(req,res) => {
     const id=req.params.id;
@@ -505,7 +554,65 @@ app.get('/enum/getEnumValues',(req,res) => {
 
 
 
+//-----------------------------------------------------------------------Alerts table----------------------------------------------------------------------
+app.post('/alerts/add', (req, res) => {
+    const { 
+        created_by,
+        updated_by,
+        is_active,
+        user_name,
+        user_id,
+        alert_type,
+        alert_message,
+        alert_level,
+        status,
+        expiry_at,
+        link_url,
+        meta_data,
+        source
+    } = req.body;
 
+    const query = `
+        INSERT INTO alerts (
+            created_by, 
+            updated_by, 
+            is_active, 
+            user_name, 
+            user_id, 
+            alert_type, 
+            alert_message, 
+            alert_level, 
+            status, 
+            expiry_at, 
+            link_url, 
+            meta_data, 
+            source
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    pool.query(query, [
+        created_by,
+        updated_by,
+        is_active,
+        user_name,
+        user_id,
+        alert_type,
+        alert_message,
+        alert_level || 'info',
+        status || 'unread',
+        expiry_at,
+        link_url,
+        meta_data ? JSON.stringify(meta_data) : null, // ensure JSON is stringified
+        source
+    ], 		(err, result) => {
+		        if(err){
+		            console.log(err)
+		        }else{
+					res.json(result);
+		        }
+		    })
+});
 
 
 

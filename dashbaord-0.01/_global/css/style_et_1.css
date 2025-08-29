@@ -52,6 +52,22 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 } 
+
+/* .ui-datepicker-prev span::before {
+    content: "<";
+    font-size: 14px;
+    color: black;
+}
+.ui-datepicker-next span::before {
+    content: ">";
+    font-size: 14px;
+    color: black;
+}
+.ui-datepicker-prev span,
+.ui-datepicker-next span {
+    background: none !important;
+}
+ */
   
 .row{
 	height: 91vh;
@@ -211,8 +227,25 @@ select option {
 	/* margin-left:10px; */
  	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
  	width:99%;
+ 	height:68vh;
+ }
+ 
+   .fullSectionDiv{
+ 	background-color:white;
+ 	padding:10px;
+ 	padding-bottom:20px;
+ 	padding-top:20px;
+ 	padding-left: 20px;
+	/* margin-left:10px; */
+ 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ 	width:99%;
  	height:88vh;
  }
+ 
+ 
+ 
+ 
+ 
  
 label {
 	margin-bottom: none !important;
@@ -225,6 +258,27 @@ label {
  	color: #fff;
  	border: none;
  	background-color: #1a73e8;
+}
+
+
+.searchButton{
+ 	width:100px !important; 
+ 	display: inline-flex;
+ 	align-items: center; 
+ 	gap: 6px;
+ 	color: #fff;
+ 	padding: 6px 12px;
+ 	cursor: pointer;
+ 	background-color: #03a106;
+ 	border-radius: 4px;
+  border: none;       /* removes default border */
+  outline: none; 
+}
+
+.searchButton:focus {
+  outline: none;
+  box-shadow: none;  
+   transform: scale(0.98);
 }
 
 .search:active {
@@ -262,7 +316,9 @@ label {
   /* border: 1px solid #ccc; */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow-y:automatic;
+  overflow-x:hidden;
  /*  margin-bottom: 1.5rem; */
+ table-layout:fixed;
 }
 
 .dataTbl  th {
@@ -297,7 +353,7 @@ label {
 }
 
 .tempalte{
-	height:400px; 
+	height:100%; 
 	width:99%;
 	border: 1px solid #ddd;
 	overflow-y:auto;
