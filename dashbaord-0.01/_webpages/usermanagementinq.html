@@ -240,8 +240,8 @@ _.each(usrData, function(item){ %>
 				<td onclick="editUsr(<%= item.id %>)" ><div class="tooltip-wrapper">
 												<i class="material-icons">edit</i><div class="tooltip-text">Edit User</div>
 			</div></td>
-				<td style="text-align:center;" onclick="deleteUsr(<%= item.id %>)"><div class="tooltip-wrapper"><i class="material-icons">delete_forever</i><div class="tooltip-text">Delete User</div>
-			</div></td>
+				<td style="text-align:center;" onclick="deleteUsr(<%= item.id %>)"><i class="material-icons" style="color: red;">delete_forever</i>
+			</td>
 			</tr>
        
 	<% }); %>

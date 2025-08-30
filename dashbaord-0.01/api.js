@@ -677,6 +677,40 @@ app.post('/alerts/updateStatusById/:id', (req, res) => {
 
 
 
+
+
+
+app.post('/alerts/deleteById/:id', (req, res) => {
+    const id = req.params.id; // Alert ID from URL
+    const { updated_by } = req.body;
+
+    if (!updated_by) {
+        return res.status(400).json({ error: "updated_by is required" });
+    }
+
+    const sql = `
+        UPDATE alerts 
+        SET is_active = "N",
+            updated_by = ?
+        WHERE id = ?
+    `;
+
+    pool.query(sql, [updated_by, id], (err, result) => {
+        if (err) {
+            console.error("Database error:", err);
+            res.status(500).json({ error: "Database error" });
+        } else if (result.affectedRows === 0) {
+            res.status(404).json({ error: "Alert not found or already inactive" });
+        } else {
+            res.json({ success: true, message: "Alert deleted successfully" });
+        }
+    });
+});
+
+
+
+
+
    app.get('/alerts/filter', (req, res) => {
     const { user_id, alert_type, status } = req.query;
 

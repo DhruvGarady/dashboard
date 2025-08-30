@@ -113,7 +113,7 @@ html, body {
 #menuContainer td {
     padding: 10px 6px;
     font-size: .825rem;
-	font-weight: 400;
+	font-weight: 600;
    /*  color: #333; */
    color: white;
     /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
@@ -224,6 +224,7 @@ select option {
  	padding-bottom:20px;
  	padding-top:20px;
  	padding-left: 20px;
+  padding-right: 15px;
 	/* margin-left:10px; */
  	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
  	width:99%;
@@ -236,6 +237,7 @@ select option {
  	padding-bottom:20px;
  	padding-top:20px;
  	padding-left: 20px;
+  padding-right: 20px;
 	/* margin-left:10px; */
  	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
  	width:99%;
@@ -327,7 +329,7 @@ label {
   text-align: left;
  padding: 12px 15px; 
   font-size: .825rem;
-  font-weight:400;
+  font-weight:600;
   border-bottom: 2px solid #34495e;
   position: sticky;
 	top: 0; 

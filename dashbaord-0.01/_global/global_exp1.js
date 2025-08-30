@@ -212,5 +212,7 @@ function buildMenu(){
 }*/
 
 function linkPage(url){
-	location.href = url;	
+	if(url != "" && url != null && url != undefined){
+		location.href = url;
+	}
 }

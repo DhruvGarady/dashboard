@@ -164,126 +164,36 @@ function search() {
 
 
 
-function addUser(){
-	location.href = 'add_user.html';
+function addAlert(){
+	location.href = 'add_alert.html';
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function saveIncomeInfo(event) {
- event.preventDefault(); 
-
- if($("#incomeForm").valid()){	
-	
-	var dataString =	{    
-	    usr_id: sessionStorage.getItem("USER_ID"),
-		month_of_receipt: $("#month").val(),
-	    income_type: $("#incomeType").val(),
-	    amount: $("#amount").val(),
-	    /*date_received: $("#dateReceived").val(),*/
-	    notes:$("#notes").val(),
-	}
-	
-	//console.log(JSON.stringify(dataString))
-	
-  strURL = request_url + "/income/add";
-	
-    $.ajax({
-        type: "POST",
-        url: strURL,
-        data: JSON.stringify(dataString),
-        contentType: "application/json",
-		beforeSend: function() {
-		  $(".wrapper").removeClass("hide");
-		  $(".loader").removeClass("hide");
-		},
-        success: onIncomeAddSuccess,
-        error: onIncomeAddErr,
-		
-		complete: function() {
-			$(".loader").addClass("hide");
-			$(".wrapper").addClass("hide");
-		}
-    });
-  }
-}
-
-
-function onIncomeAddSuccess(){
-	alert("Successfully Added Income.")
-	//sessionStorage.setItem("USER_ID",data)	
-	$(".loader").addClass("hide");
-	$(".wrapper").addClass("hide");
-	refresh();	
-}
-
-function onIncomeAddErr(){
-	alert("There was a problem.")
-	//sessionStorage.removeItem("USER_ID")
-	$(".loader").addClass("hide");
-	$(".wrapper").addClass("hide");
-}
 
 
 
 // -----------------------delete-----------------------------
 
-function deleteAll(){
 
-	var bool= window.confirm("Are you sure you want to delete all the record?");
+function deleteAlert(id){
+	
+	var bool= window.confirm("Are you sure you want to delete this Alert?");
 
 	if(bool == true){
+
+		dataString ={
+			updated_by: sessionStorage.getItem("USERNAME"),
+		}
+
+
 		$.ajax({
-		    url: request_url + '/income/delete/'+ sessionStorage.getItem("USER_ID"),
-		    type: 'DELETE',
-		    success: function(response) {
-		        console.log('Record deleted successfully:', response);
-				refresh()
-			},
-		    error: function(xhr, status, error) {
-				alert("There was a problem");
-		        console.error('Error deleting record:', error);
-		    }
-		});
-
-	}	
-
-}
-
-/*function tmpldate(id){
-	
-	$("#dateReceivedTmpl-"+id).datepicker({
-		dateFormat:'yy-mm-dd',
-		changeMonth: true,
-		changeYear: true
-	});	
-}*/
-
-function deleteUsr(id){
-	
-	var bool= window.confirm("Are you sure you want to delete this user?");
-
-	if(bool == true){
-		$.ajax({
-		    url: request_url + '/user/deleteUserById/'+ id,
-		    type: 'PUT',
+		    url: request_url + '/alerts/deleteById/'+ id,
+		    type: 'POST',
+			data: JSON.stringify(dataString),
+			contentType: "application/json",
 		    success: onUsrDelSuccuess,
 		    error: function(xhr, status, error) {
-				alert("There was a problem");
+				alert("There was a problem.");
 		        console.error('Error deleting record:', error);
 		    }
 		});
@@ -293,48 +203,6 @@ function deleteUsr(id){
 }
 
 function onUsrDelSuccuess(){
-	alert("User deleted.")
+	alert("Alert deleted.")
 	search();
-}
-
-function saveInlineIncome(id){
-
-	 
-		var dataString ={
-			month_of_receipt: $("#tmplMonth-" + id).val(),
-			income_type: $("#tmplIncomeType-" + id).val(),
-			//date_received: $("#dateReceivedTmpl" + id).val(),
-			amount: $("#tmplIncomeAmt-"+id).val(),
-	    }
-		
-		//console.log(".........//final........."+JSON.stringify(dataString))
-		
-	  strURL = request_url + "/update/incomeid/"+id;
-		
-	    $.ajax({
-	        type: "PUT",
-	        url: strURL,
-	        data: JSON.stringify(dataString),
-	        contentType: "application/json",
-	        success: onIncomeUpdateSuccess,
-	        error: onIncomeUpdateErr,
-	    });
-	  
-
-}
-
-function onIncomeUpdateSuccess(){
-	refresh();
-}
-
-function onIncomeUpdateErr(){
-	alert("Oops, there was a problem with your request");	
-}
-
-function createIncomeChart(){
-	if(Data.length < 1){
-		alert("Please Enter atleast one record.")
-	}else{
-		dasboard();		
-	}
 }
