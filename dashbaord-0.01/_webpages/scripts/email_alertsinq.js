@@ -15,9 +15,10 @@ var section = {
 	details:[]
 }
 
-var userTypeCode = '1000';
-var semesterCode = '2000';
-var sectionCode = '2001';
+var userList = [];
+
+var alertTypeCode = '2002';
+var alertStatusCode = '2003';
 
 
 $(document).ready(function() {
@@ -46,41 +47,61 @@ var classSectionTemplate = $("#classSectionTmpl").html();
 
 genricData = JSON.parse(sessionStorage.getItem("ENUM_VALUES"))
 
-// -------------------------------- SECTION ------------------------------------
-section = genricData.find( item => item.master_code == sectionCode)
+// -------------------------------- ALERT STATUS------------------------------------
+section = genricData.find( item => item.master_code == alertStatusCode)
 if(section == null || section == undefined || section == ""){
 	section = {
 		details:[]
 	}	
 }
-$("#classSection").html(_.template(classSectionTemplate, section.details));
-$('#classSection').trigger("create");
+$("#alertStatus").html(_.template(classSectionTemplate, section.details));
+$('#alertStatus').trigger("create");
 
 
-// --------------------------------USER TYPE ------------------------------------
-userType = genricData.find( item => item.master_code == userTypeCode)
+// --------------------------------ALERT TYPE------------------------------------
+userType = genricData.find( item => item.master_code ==  alertTypeCode)
 if(userType == null || userType == undefined || userType == ""){
 	userType = {
 		details:[]
 	}	
 }
-$("#userType").html(_.template(userTypeTemplate, userType.details));
-$('#userType').trigger("create");
+$("#alertType").html(_.template(userTypeTemplate, userType.details));
+$('#alertType').trigger("create");
 
 
 
-// --------------------------------SEMESTER------------------------------------
-semester = genricData.find( item => item.master_code == semesterCode)
-if(semester == null || semester == undefined || semester == ""){
-	semester = {
-		details:[]
-	}	
-}
-$("#semester").html(_.template(semesterTemplate, semester.details));
-$('#semester').trigger("create");
+// --------------------------------USER AUTOCOMPLETE------------------------------------
+
+const url = request_url + "/user/getUsers";
+usrList = getAPIdata(url);
+
+_.each(usrList, function(item, index ) {
+
+	const fullName = item.first_name + ' ' + item.last_name;
+
+	userList.push({ 
+		value: fullName, 
+		id: item.id 
+	});
+	})
 
 
-
+$("#searchBox").autocomplete({
+    source: userList,
+    select: function(event, ui) {
+        $("#searchBox").val(ui.item.value);
+		$("#userId").val(ui.item.id);
+       // search();
+       // return false;
+    },
+    change: function(event, ui) {
+        if (ui.item == null || ui.item == undefined) {
+            $("#searchBox").val('');
+		  $("#userId").val('');
+           //  search();
+		}
+    }
+}); 
 
 
 
@@ -127,13 +148,13 @@ search()
 
 }*/
 function search() {
-    const query = $.param({
-        user_type: $("#userType").val() || undefined,
-        class_section: $("#classSection").val() || undefined,
-        semester: $("#semester").val() || undefined,
+	const query = $.param({
+        alert_type: $("#alertType").val() || undefined,
+        status: $("#alertStatus").val() || undefined,
+        user_id: $("#userId").val() || undefined 
     });
 
-    const url = request_url + "/user/filter?"+query;
+    const url = request_url + "/alerts/filter?"+query;
 	
 	usrData = getAPIdata(url);
 	$("#listContainer2").html(_.template(userTemplate, usrData));

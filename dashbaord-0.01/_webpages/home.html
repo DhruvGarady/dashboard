@@ -262,57 +262,37 @@ body{
  
  		<table width="98%">
 			<tr>
-				<td class="mainTblHdr">Notifications:</td> 
+				<td class="mainTblHdr">Alerts:</td> 
 			</tr>
 		</table>
  
-		<table width="50%">
+		<div id="listContainer2" class="tempalte" style="height: 90%;">
+			<script type="text/template" id="listTmpl">
 	
-	<tr>
-		<td width="20%">	
-		<div class="">
-			<label class="form-group">User Type:</label>
-			<select id="userType" name="userType" style="width:100%">
-			  <option value="">Select</option>
-			  <option value="PRINCIPAL">PRINCIPAL</option>
-			  <option value="VP">VP</option>
-			  <option value="HOD">HOD</option>
-			  <option value="TEACHER">TEACHER</option>
-			  <option value="STAFF">STAFF</option>
-			  <option value="STUDENT">STUDENT</option>
-			</select>		  
-		  
-		</div>
-		</td>
-	
-		<td width="2%"></td>
-		
-		<td width="20%">	
-		<div class="">
-			<label class="form-group">Section:</label>
-			<select id="Section" name="Section" style="width:100%">
-			  <option value="">Select</option>
-			  <option value="PRINCIPAL">PRINCIPAL</option>
-			  <option value="VP">VP</option>
-			  <option value="HOD">HOD</option>
-			  <option value="TEACHER">TEACHER</option>
-			  <option value="STAFF">STAFF</option>
-			  <option value="STUDENT">STUDENT</option>
-			</select>		  
-		  
-		</div>
-
-		</td>	
+			<table style="width:100%;" class="dataTbl">
+				  <tr>
+					<th width="70%">Alert Message</th>
+					<th width="30%">Alert Status</th>
+				  </tr>	
 			
-		<td width="2%"></td>
-		
-		<td width="20px" style="vertical-align:bottom;">	
-			<input type="button" value="Search" onclick="search()" class="search">	  
-
-		</td>			
-	
-	</tr>	
-		</table>    
+		<%_.each(usrData, function(item){ %>
+				<tr>
+					<td><%= item.alert_message %></td>
+					
+					<td>
+						<select class="statusSelect" data-id="<%= item.id %>" id="status-<%= item.id %>" value="<%= item.status %>" onchange="changeAlertStatus('<%= item.id %>')">
+							<%_.each(section.details, function(item){ %>
+							  <option value="<%= item.value1%>"><%= item.value1%></option>	
+							<% }); %>	
+							</select>	
+					</td>
+				
+				</tr>
+		   
+		<% }); %>
+		</table>
+		</script>
+		</div>  
     
     
     </div>	

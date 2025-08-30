@@ -432,7 +432,6 @@ app.get('/user/getStudentsCount',(req,res) => {
 })
 
 
-
 app.get('/user/getFacultyCount',(req,res) => {
 
  pool.query(	`SELECT COUNT(*) AS numberOfFaculty FROM doc_users
@@ -615,10 +614,100 @@ app.post('/alerts/add', (req, res) => {
 });
 
 
+app.get('/alerts/getAlerts',(req,res) => {
+
+    pool.query('SELECT * FROM alerts WHERE is_active = "Y"', 
+   (err, result) => {
+           if(err){
+               console.log(err)
+           }else{
+               res.json(result);
+           }
+       })
+   })
+
+
+   app.get('/alerts/getAlertsById/:id', (req, res) => {
+    const id = req.params.id; // Get user ID from the URL
+
+    pool.query(
+        'SELECT * FROM alerts WHERE is_active = "Y" AND user_id = ?',
+        [id],
+        (err, result) => {
+            if (err) {
+                console.error("Database error:", err);
+                res.status(500).json({ error: "Database error" });
+            } else {
+                res.json(result);
+            }
+        }
+    );
+});
+
+
+
+app.post('/alerts/updateStatusById/:id', (req, res) => {
+    const id = req.params.id; // Alert ID from URL
+    const { status, updated_by  } = req.body;
+
+    if (!status) {
+        return res.status(400).json({ error: "Status is required" });
+    }
+
+    const sql = `
+        UPDATE alerts 
+        SET status = ?,
+            updated_by = ? 
+        WHERE is_active = "Y" AND id = ?
+    `;
+
+    pool.query(sql, [status, updated_by, id], (err, result) => {
+        if (err) {
+            console.error("Database error:", err);
+            res.status(500).json({ error: "Database error" });
+        } else if (result.affectedRows === 0) {
+            res.status(404).json({ error: "Alert not found or inactive" });
+        } else {
+            res.json({ success: true, message: "Status updated successfully" });
+        }
+    });
+});
 
 
 
 
+
+   app.get('/alerts/filter', (req, res) => {
+    const { user_id, alert_type, status } = req.query;
+
+    let sql = `SELECT * FROM alerts WHERE is_active = "Y"`;
+
+    const params = [];
+
+    if (user_id !== "" && user_id !== null && user_id !== undefined) {
+        sql += ` AND user_id = ?`;
+        params.push(user_id);
+    }
+
+    if (alert_type && alert_type.toUpperCase() !== "ALL") {
+        sql += ` AND alert_type = ?`;
+        params.push(alert_type);
+    }
+
+    if (status && status.toUpperCase() !== "ALL") {
+        sql += ` AND status = ?`;
+        params.push(status);
+    }
+
+    pool.query(sql, params, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+        } else {
+            res.json(result);
+        }
+    });
+});
 
 
 

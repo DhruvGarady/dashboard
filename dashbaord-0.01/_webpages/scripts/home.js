@@ -8,6 +8,15 @@ var userType = [];
 var userCountPerSemCount = [];
 var semCount = [];
 
+var usrData = [];
+
+
+var section = {
+	details:[]
+}
+
+var alertStatusCode = '2003';
+var genricData;
 $(document).ready(function() {
 
 /*	$("#dateReceived").datepicker({
@@ -74,7 +83,33 @@ if(staffCount != null && staffCount != "" && staffCount != undefined){
 	
 createUserChart();
 createStudentEnrolledBySem();
-	
+
+
+//---------------------Alerts----------------------------
+genricData = JSON.parse(sessionStorage.getItem("ENUM_VALUES"))
+
+section = genricData.find( item => item.master_code == alertStatusCode)
+if(section == null || section == undefined || section == ""){
+	section = {
+		details:[]
+	}	
+}
+
+
+
+const url = request_url + "/alerts/getAlertsById"+"/"+ sessionStorage.getItem("USER_ID");
+usrData = getAPIdata(url);
+
+userTemplate = $("#listTmpl").html();
+
+$("#listContainer2").html(_.template(userTemplate, usrData));
+$('#listContainer2').trigger("create");	
+
+_.each(usrData, function(item, index ) {
+	$("#status-" + item.id).val(item.status);
+});
+
+
 });
 
 function saveIncomeInfo(event) {
@@ -643,3 +678,32 @@ function createStudentEnrolledBySem(){
 
 	}	
 }
+
+
+function changeAlertStatus(id){
+	var dataString ={
+		status: $("#status-" + id).val(),
+		updated_by: sessionStorage.getItem("USERNAME")
+	}
+
+	strURL = request_url + "/alerts/updateStatusById/"+id;
+	
+	$.ajax({
+		type: "POST",
+		url: strURL,
+		data: JSON.stringify(dataString),
+		contentType: "application/json",
+		success: onAlertupdateSuccess,
+		error: onAlertupdateErr,
+	});
+
+
+}
+
+function onAlertupdateSuccess(){
+	alert("Status updated.");
+}
+
+function onAlertupdateErr(){
+	alert("Oops, there was a problem with your request");	
+}	
