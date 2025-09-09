@@ -3,6 +3,7 @@ var usrData
 var userTemplate;
 
 
+
 var genricData;
 
 var userType = {
@@ -14,25 +15,36 @@ var semester = {
 var section = {
 	details:[]
 }
-
-var userTypeCode = '1000';
-var semesterCode = '2000';
-var sectionCode = '2001';
+var state = {
+	details:[]
+}
+var alertTypeCode = '2002';
+var alertStatusCode = '2003';
+var userList = [];
 
 
 $(document).ready(function() {
 
-/*	$("#dateReceived").datepicker({
-		//beforeShowDay: $.datepicker.noWeekends,
-		dateFormat:'yy-mm-dd',
+	$("#date_of_birth").datepicker({
+		dateFormat:'dd-mm-yy',
 		changeMonth: true,
 		changeYear: true
-	});	*/
+	}).datepicker("setDate", new Date());
+	
 
+	$("#ExpiryDt").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		changeYear: true
+	}).datepicker("setDate", new Date());
+
+	
+	
  	
 isUserLoggedIn()
 buildMenu();
 setUsrName()
+
 
 
 userTemplate = $("#listTmpl").html();
@@ -45,177 +57,147 @@ var classSectionTemplate = $("#classSectionTmpl").html();
 
 genricData = JSON.parse(sessionStorage.getItem("ENUM_VALUES"))
 
-// -------------------------------- SECTION ------------------------------------
-section = genricData.find( item => item.master_code == sectionCode)
+// -------------------------------- ALERT STATUS------------------------------------
+section = genricData.find( item => item.master_code == alertStatusCode)
 if(section == null || section == undefined || section == ""){
 	section = {
 		details:[]
 	}	
 }
-$("#classSection").html(_.template(classSectionTemplate, section.details));
-$('#classSection').trigger("create");
+$("#alertStatus").html(_.template(classSectionTemplate, section.details));
+$('#alertStatus').trigger("create");
 
 
-// --------------------------------USER TYPE ------------------------------------
-userType = genricData.find( item => item.master_code == userTypeCode)
+// --------------------------------ALERT TYPE------------------------------------
+userType = genricData.find( item => item.master_code ==  alertTypeCode)
 if(userType == null || userType == undefined || userType == ""){
 	userType = {
 		details:[]
 	}	
 }
-$("#userType").html(_.template(userTypeTemplate, userType.details));
-$('#userType').trigger("create");
+$("#alertType").html(_.template(userTypeTemplate, userType.details));
+$('#alertType').trigger("create");
 
 
 
-// --------------------------------SEMESTER------------------------------------
-semester = genricData.find( item => item.master_code == semesterCode)
-if(semester == null || semester == undefined || semester == ""){
-	semester = {
-		details:[]
-	}	
-}
-$("#semester").html(_.template(semesterTemplate, semester.details));
-$('#semester').trigger("create");
+// --------------------------------USER AUTOCOMPLETE------------------------------------
+
+const url = request_url + "/user/getUsers";
+usrList = getAPIdata(url);
+
+_.each(usrList, function(item, index ) {
+
+	const fullName = item.first_name + ' ' + item.last_name;
+
+	userList.push({ 
+		value: fullName, 
+		id: item.id 
+	});
+	})
+
+
+$("#searchBox").autocomplete({
+    source: userList,
+    select: function(event, ui) {
+        $("#searchBox").val(ui.item.value);
+		$("#userId").val(ui.item.id);
+       // search();
+       // return false;
+    },
+    change: function(event, ui) {
+        if (ui.item == null || ui.item == undefined) {
+            $("#searchBox").val('');
+		  $("#userId").val('');
+           //  search();
+		}
+    }
+}); 
 
 
 
 
+});
 
 
-
-
+function save(){
 	
-usrData = [];
-$("#listContainer2").html(_.template(userTemplate, usrData));
-$('#listContainer2').trigger("create");	
-
-/*	
-	
-	$("#incomeForm").validate({
+	var vald = $("#alertForm").validate({
 	    rules: {
-	        month: { 
+	        user_name: { 
 				required: true,
 				},
-	        incomeType: { 
+	        alrtmsg: { 
 				required: true,
 			},
-			amount: {
+			userType: {
 				required: true,
 			},
-			dateReceived: {
+			classSection: {
 				required: true,
 			}
 	    },
 
 	});
+	vald.form();
 
-*/
+	if($("#alertForm").valid()){	
 	
-search()
+	var formData ={
+		"created_by": sessionStorage.getItem("USERNAME"),
+		"updated_by":  sessionStorage.getItem("USERNAME"),
+		"is_active": "Y",
+		"user_name": $("#searchBox").val(),
+		"user_id": $("#userId").val(),
+		"alert_type": $("#alertType").val(),
+		"status": $("#alertStatus").val(),
+		"alert_message": $("#alert_message").val(),
+		"alert_level": $("#alert_level").val(),
+		"expiry_at": $("#ExpiryDt").val(),
+		"source": $("#source").val()
+};
 	
-});
-
-
-/*function search(){
-	strURL = request_url + "/user/filter/"+ $("#userType").val() +"/"+ $("#classSection").val() +"/"+ $("#semester").val();
-	usrData = getAPIdata(strURL);
-
-	$("#listContainer2").html(_.template(userTemplate, usrData));
-	$('#listContainer2').trigger("create");		
-
-}*/
-function search() {
-    const query = $.param({
-        user_type: $("#userType").val() || undefined,
-        class_section: $("#classSection").val() || undefined,
-        semester: $("#semester").val() || undefined,
-    });
-
-    const url = request_url + "/user/filter?"+query;
+	console.log(JSON.stringify(formData))
 	
-	usrData = getAPIdata(url);
-	$("#listContainer2").html(_.template(userTemplate, usrData));
-	$('#listContainer2').trigger("create");	
-}
+	strURL = request_url + "/alerts/add";
 
-
-function addUser(){
-	location.href = 'add_user.html';
-}
-
-function editUsr(id){
-	sessionStorage.setItem("EDIT_USER_ID",id)
-	location.href = 'edit_user.html';
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function saveIncomeInfo(event) {
- event.preventDefault(); 
-
- if($("#incomeForm").valid()){	
-	
-	var dataString =	{    
-	    usr_id: sessionStorage.getItem("USER_ID"),
-		month_of_receipt: $("#month").val(),
-	    income_type: $("#incomeType").val(),
-	    amount: $("#amount").val(),
-	    /*date_received: $("#dateReceived").val(),*/
-	    notes:$("#notes").val(),
-	}
-	
-	//console.log(JSON.stringify(dataString))
-	
-  strURL = request_url + "/income/add";
-	
-    $.ajax({
-        type: "POST",
-        url: strURL,
-        data: JSON.stringify(dataString),
-        contentType: "application/json",
+	  $.ajax({
+	      type: "POST",
+	      url: strURL,
+	      data: JSON.stringify(formData),
+	      contentType: "application/json",
 		beforeSend: function() {
 		  $(".wrapper").removeClass("hide");
 		  $(".loader").removeClass("hide");
 		},
-        success: onIncomeAddSuccess,
-        error: onIncomeAddErr,
+	      success: onUserAddSuccess,
+	      error: onUserAddErr,
 		
 		complete: function() {
 			$(".loader").addClass("hide");
 			$(".wrapper").addClass("hide");
 		}
-    });
-  }
+	  });
+
+	}
 }
 
 
-function onIncomeAddSuccess(){
-	alert("Successfully Added Income.")
+function onUserAddSuccess(){
+	alert("Alert successfully added")
 	//sessionStorage.setItem("USER_ID",data)	
-	$(".loader").addClass("hide");
-	$(".wrapper").addClass("hide");
-	refresh();	
+	//$(".loader").addClass("hide");
+	//$(".wrapper").addClass("hide");
+	location.href = "email_alertsinq.html";
 }
-
-function onIncomeAddErr(){
+function onUserAddErr(){
 	alert("There was a problem.")
 	//sessionStorage.removeItem("USER_ID")
-	$(".loader").addClass("hide");
-	$(".wrapper").addClass("hide");
+	//$(".loader").addClass("hide");
+	//$(".wrapper").addClass("hide");
 }
+
+
+
 
 
 

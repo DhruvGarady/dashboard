@@ -88,8 +88,10 @@ function userLogin() {
 function onUserLoginSuccess(response) {
 		//alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
-		sessionStorage.setItem("USERNAME",response.username)
-		location.href = "_webpages/home.html"
+		sessionStorage.setItem("USERNAME",response.username);
+		sessionStorage.setItem("PROFILE_PICTURE", response.profile_picture || "https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/default-profilepic.jpg");
+
+		location.href = "_webpages/home.html";
 }
 
 function onUserLoginErr(){
@@ -157,11 +159,17 @@ function getJSONData(strURL) {
   });*/
 function setUsrName(){
 	var userName = sessionStorage.getItem("USERNAME");
+	var profile_picture = sessionStorage.getItem("PROFILE_PICTURE");
 
 	if(userName != "" && userName != null && userName != undefined){
 		$("#userName").html(userName);
 	}
-		
+
+	if(profile_picture != "" && profile_picture != null && profile_picture != undefined){
+		$("#profilePicture").attr("src", profile_picture);
+	}else{
+		$("#profilePicture").attr("src", "https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/default-profilepic.jpg");
+	}
 }
 
 function functionLogout(){

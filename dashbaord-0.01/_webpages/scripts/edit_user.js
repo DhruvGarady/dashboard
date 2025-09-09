@@ -110,8 +110,57 @@ $('#state').trigger("create");
 
 
 
+	strURL = request_url + "/user/getById/" + sessionStorage.getItem("EDIT_USER_ID");
+	usrData = getAPIdata(strURL);
 
+	_.each(usrData, function(user, index ) {
+			// Prefill form fields with user data	
+			$("#first_name").val(user.first_name || "");
+			$("#last_name").val(user.last_name || "");
+			$("#email").val(user.email || "");
+			$("#username").val(user.username || "");
+			$("#password_hash").val(""); // usually you don't prefill password
+			$("#phone").val(user.phone || "");
+			$("#date_of_birth").val(user.date_of_birth || "");
+			$("#gender").val(user.gender || "");
+			$("#user_type").val(user.user_type || "");
+			$("#address").val(user.address || "");
+			$("#nationality").val(user.nationality || "");
+			$("#grade_level").val(user.grade_level || "");
+			$("#admission_date").val(user.admission_date || "");
+			$("#class_section").val(user.class_section || "");
+			$("#course").val(user.course || "");
+			$("#GPA").val(user.GPA || "");
+			$("#attendance_percentage").val(user.attendance_percentage || "");
+			$("#academic_status").val(user.academic_status || "");
+			$("#guardian_name").val(user.guardian_name || "");
+			$("#guardian_phone").val(user.guardian_phone || "");
+			$("#guardian_email").val(user.guardian_email || "");
+			$("#relationship").val(user.relationship || "");
+			$("#courses_enrolled").val(user.courses_enrolled || "");
+			$("#credits_earned").val(user.credits_earned || "");
+			$("#semester").val(user.semester || "");
+			$("#tuition_status").val(user.tuition_status || "");
+			$("#blood_type").val(user.blood_type || "");
+			$("#medical_conditions").val(user.medical_conditions || "");
+			$("#emergency_contact_name").val(user.emergency_contact_name || "");
+			$("#emergency_contact_phone").val(user.emergency_contact_phone || "");
+			$("#disciplinary_record").val(user.disciplinary_record || "");
+			$("#clubs_and_activities").val(user.clubs_and_activities || "");
+			$("#sports_participation").val(user.sports_participation || "");
+			$("#volunteer_hours").val(user.volunteer_hours || "");
+			$("#last_login").val(user.last_login || "");
+			$("#account_status").val(user.account_status || "");
+			$("#roll_num").val(user.roll_num || "");
+			$("#country").val(user.country || "");
+			$("#state").val(user.state || "");
+			$("#pincode").val(user.pincode || "");
 
+			// If you want to preview profile picture
+			if (user.profile_picture) {
+				$("#profile_picture_preview").attr("src", user.profile_picture);
+			}
+	});	
 
 
 
@@ -165,7 +214,7 @@ function save() {
     formData.append("grade_level", $("#grade_level").val());
     formData.append("admission_date", $("#admission_date").val());
     formData.append("class_section", $("#classSection").val());
-    formData.append("course", $("#courseDetails").val());
+    formData.append("course", $("#course").val());
     formData.append("GPA", $("#GPA").val());
     formData.append("attendance_percentage", $("#attendance_percentage").val());
     formData.append("academic_status", $("#academic_status").val());
