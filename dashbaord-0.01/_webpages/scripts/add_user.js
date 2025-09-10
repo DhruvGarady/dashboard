@@ -220,117 +220,26 @@ function save() {
 }
 
 function onUserAddSuccess(res) {
-    alert("User successfully added!");
-    console.log("Response:", res);
+  showSuccessDialog("User added successfully!", function() {
+    // this will run after OK is pressed
     location.href = "usermanagementinq.html";
+  });
+
 }
 
 function onUserAddErr(err) {
-    alert("There was a problem.");
+	showErrorDialog("There was a problem adding the user.");
     console.error("Error:", err);
 }
 
 
-
-
-
-
-
-// -----------------------delete-----------------------------
-
-function deleteAll(){
-
-	var bool= window.confirm("Are you sure you want to delete all the record?");
-
-	if(bool == true){
-		$.ajax({
-		    url: request_url + '/income/delete/'+ sessionStorage.getItem("USER_ID"),
-		    type: 'DELETE',
-		    success: function(response) {
-		        console.log('Record deleted successfully:', response);
-				refresh()
-			},
-		    error: function(xhr, status, error) {
-				alert("There was a problem");
-		        console.error('Error deleting record:', error);
-		    }
-		});
-
-	}	
-
+function previewImage(e){
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        $("#imagePreview").attr("src", event.target.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
 }
 
-/*function tmpldate(id){
-	
-	$("#dateReceivedTmpl-"+id).datepicker({
-		dateFormat:'yy-mm-dd',
-		changeMonth: true,
-		changeYear: true
-	});	
-}*/
 
-function deleteUsr(id){
-	
-	var bool= window.confirm("Are you sure you want to delete this user?");
 
-	if(bool == true){
-		$.ajax({
-		    url: request_url + '/user/deleteUserById/'+ id,
-		    type: 'PUT',
-		    success: onUsrDelSuccuess,
-		    error: function(xhr, status, error) {
-				alert("There was a problem");
-		        console.error('Error deleting record:', error);
-		    }
-		});
-
-	}	
-
-}
-
-function onUsrDelSuccuess(){
-	alert("User deleted.")
-	search();
-}
-
-function saveInlineIncome(id){
-
-	 
-		var dataString ={
-			month_of_receipt: $("#tmplMonth-" + id).val(),
-			income_type: $("#tmplIncomeType-" + id).val(),
-			//date_received: $("#dateReceivedTmpl" + id).val(),
-			amount: $("#tmplIncomeAmt-"+id).val(),
-	    }
-		
-		//console.log(".........//final........."+JSON.stringify(dataString))
-		
-	  strURL = request_url + "/update/incomeid/"+id;
-		
-	    $.ajax({
-	        type: "PUT",
-	        url: strURL,
-	        data: JSON.stringify(dataString),
-	        contentType: "application/json",
-	        success: onIncomeUpdateSuccess,
-	        error: onIncomeUpdateErr,
-	    });
-	  
-
-}
-
-function onIncomeUpdateSuccess(){
-	refresh();
-}
-
-function onIncomeUpdateErr(){
-	alert("Oops, there was a problem with your request");	
-}
-
-function createIncomeChart(){
-	if(Data.length < 1){
-		alert("Please Enter atleast one record.")
-	}else{
-		dasboard();		
-	}
-}

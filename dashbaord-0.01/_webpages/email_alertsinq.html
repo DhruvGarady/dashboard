@@ -183,7 +183,7 @@ body{
 			<div class="tooltip-wrapper">
 			 <!--<input type="button" value="+" onclick="addUser()" class="actionButton">-->
 			    <input type="button" value="Add Alert" onclick="addAlert()" class="search"> 
-			  <div class="tooltip-text">Add new user</div>
+			  <div class="tooltip-text">Add alert</div>
 			</div>
 		</td>
 
@@ -211,7 +211,7 @@ body{
 				<th width="30%">Alert Message</th>
 				<th width="6%">Alert Level</th>
 				<th width="8%">Alert Status</th>
-				<th width="3%">Edit</th>
+				<!--<th width="3%">Edit</th> -->
 				<th width="3%" style="text-align:center;">Del</th>
 			  </tr>	
         
@@ -223,9 +223,9 @@ _.each(usrData, function(item){ %>
 				<td><%= item.alert_message %></td>
 				<td><%= item.alert_level %></td>
 				<td><%= item.status %></td>
-				<td onclick="editUsr(<%= item.id %>)" ><div class="tooltip-wrapper">
+				<!--<td onclick="editUsr(<%= item.id %>)" ><div class="tooltip-wrapper">
 												<i class="material-icons">edit</i><div class="tooltip-text">Edit User</div>
-			</div></td>
+			</div></td> -->
 				<td style="text-align:center;" onclick="deleteAlert('<%= item.id %>')"><i class="material-icons" style="color: red;">delete_forever</i></td>
 			</tr>
        

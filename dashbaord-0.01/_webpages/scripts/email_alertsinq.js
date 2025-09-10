@@ -176,10 +176,8 @@ function addAlert(){
 
 
 function deleteAlert(id){
-	
-	var bool= window.confirm("Are you sure you want to delete this Alert?");
 
-	if(bool == true){
+  showConfirmDialog("Are you sure you want to delete this alert?", function() {
 
 		dataString ={
 			updated_by: sessionStorage.getItem("USERNAME"),
@@ -193,16 +191,16 @@ function deleteAlert(id){
 			contentType: "application/json",
 		    success: onUsrDelSuccuess,
 		    error: function(xhr, status, error) {
-				alert("There was a problem.");
+				showErrorDialog("There was a problem.");
 		        console.error('Error deleting record:', error);
 		    }
 		});
 
-	}	
+  });	
 
 }
 
 function onUsrDelSuccuess(){
-	alert("Alert deleted.")
+	showSuccessDialog("Alert deleted.")
 	search();
 }

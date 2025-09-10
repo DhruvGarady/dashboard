@@ -34,6 +34,14 @@ buildMenu();
 
 setUsrName()
 
+//  showSystemError("A system error occurred. Please contact support.");
+
+//  showErrorDialog("Failed to update user!");
+
+//  showWarningDialog("Are you sure you want to delete this user?");
+
+//  showSuccessDialog("User added successfully!");
+
 
 if(sessionStorage.getItem("ENUM_VALUES") == null || sessionStorage.getItem("ENUM_VALUES") == "" || sessionStorage.getItem("ENUM_VALUES") == undefined){ 
 strURL = request_url +"/enum/getEnumValues";
@@ -938,9 +946,15 @@ function changeAlertStatus(id){
 }
 
 function onAlertupdateSuccess(){
-	alert("Status updated.");
+	showSuccessDialog("Status Updated.");
 }
 
 function onAlertupdateErr(){
-	alert("Oops, there was a problem with your request");	
+	showErrorDialog("Oops, there was a problem with your request.");
 }	
+
+// showErrorDialog("Failed to update user!");
+
+// showWarningDialog("Are you sure you want to delete this user?");
+
+// showSuccessDialog("User added successfully!");

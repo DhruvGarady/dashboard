@@ -183,14 +183,14 @@ function save(){
 
 
 function onUserAddSuccess(){
-	alert("Alert successfully added")
-	//sessionStorage.setItem("USER_ID",data)	
-	//$(".loader").addClass("hide");
-	//$(".wrapper").addClass("hide");
-	location.href = "email_alertsinq.html";
+	showSuccessDialog("Alert successfully updated.", function() {
+		location.href = "email_alertsinq.html";
+	});
 }
+
+
 function onUserAddErr(){
-	alert("There was a problem.")
+	showErrorDialog("There was a problem.")
 	//sessionStorage.removeItem("USER_ID")
 	//$(".loader").addClass("hide");
 	//$(".wrapper").addClass("hide");

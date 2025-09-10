@@ -153,10 +153,15 @@ html, body {
 
 /* -------------Menu--------------- */
 
+/* .ui-dialog-buttonpane .ui-widget-content .ui-helper-clearfix {
+    padding: none;
+    border-top: 1px solid #eee;
+    text-align: right;
+} */
 
- /*------------- main Div -------------*/
- 
- .mainDiv{
+/*------------- main Div -------------*/
+
+.mainDiv{
  	padding :22px !important; 
  }
  

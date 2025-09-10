@@ -299,7 +299,8 @@ label {
         </div>
       </td>      
     </tr>
- 
+
+
      <tr>
       <td width="20%">
         <div class="form-group">
@@ -307,7 +308,7 @@ label {
         </div>
       </td>
       <td width="5%"></td>
-      <td width="20%">
+      <td width="20%"> 
         <div class="form-group">
           Password <span style="color:red;">*</span><input type="password" name="password_hash" id="password_hash" >
         </div>
@@ -486,10 +487,35 @@ label {
     </tr>
 
   <tr>
-    <td>
-
-    </td>
+          <td style="vertical-align:top; width:150px; height:150px; text-align:center;">
+            <img id="imagePreview" src=""  style="width:150px; height:150px; border:1px solid #000000;">
+          </td>
+          <td style="width: 20px;"></td>
+          <td>
+            <div class="form-group">
+                Profile Picture <input type="file" name="profile_picture" id="profile_picture" accept="image/*" onchange="previewImage(event)">
+              </div>
+          </td>
   </tr>
+
+
+  <!-- <tr>
+    <td>
+      <table>
+        <tr>
+          <td style="vertical-align:top; width:100px; height:100px; border:1px solid #000000;">
+            <img id="imagePreview" src=""  style="width:100px; height:100px; ">
+          </td>
+          <td style="width: 20px;"></td>
+          <td>
+            <div class="form-group">
+                Profile Picture <input type="file" name="profile_picture" id="profile_picture" accept="image/*" onchange="previewImage(event)">
+              </div>
+          </td>
+        </tr>
+    </table>
+    </td>
+  </tr> -->
 
 
   <tr>
