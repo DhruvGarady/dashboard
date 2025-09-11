@@ -1,10 +1,13 @@
+require("dotenv").config();  // load .env
 const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-require("dotenv").config();  // load .env
+const nodemailer = require("nodemailer");
+
+
 
 const app = express();
 app.use(express.json());
@@ -820,64 +823,194 @@ app.get('/enum/getEnumValues',(req,res) => {
 
 
 //-----------------------------------------------------------------------Alerts table----------------------------------------------------------------------
-app.post('/alerts/add', (req, res) => {
-    const { 
-        created_by,
-        updated_by,
-        is_active,
-        user_name,
-        user_id,
-        alert_type,
-        alert_message,
-        alert_level,
-        status,
-        expiry_at,
-        link_url,
-        meta_data,
-        source
-    } = req.body;
+// app.post('/alerts/add', (req, res) => {
+//     const { 
+//         created_by,
+//         updated_by,
+//         is_active,
+//         user_name,
+//         user_id,
+//         email_id,
+//         alert_type,
+//         alert_message,
+//         alert_level,
+//         status,
+//         expiry_at,
+//         link_url,
+//         meta_data,
+//         source
+//     } = req.body;
 
-    const query = `
-        INSERT INTO alerts (
-            created_by, 
-            updated_by, 
-            is_active, 
-            user_name, 
-            user_id, 
-            alert_type, 
-            alert_message, 
-            alert_level, 
-            status, 
-            expiry_at, 
-            link_url, 
-            meta_data, 
-            source
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+//     const query = `
+//         INSERT INTO alerts (
+//             created_by, 
+//             updated_by, 
+//             is_active, 
+//             user_name, 
+//             user_id,
+//             email_id, 
+//             alert_type, 
+//             alert_message, 
+//             alert_level, 
+//             status, 
+//             expiry_at, 
+//             link_url, 
+//             meta_data, 
+//             source
+//         )
+//         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//     `;
 
-    pool.query(query, [
-        created_by,
-        updated_by,
-        is_active,
-        user_name,
-        user_id,
-        alert_type,
-        alert_message,
-        alert_level || 'info',
-        status || 'unread',
-        expiry_at,
-        link_url,
-        meta_data ? JSON.stringify(meta_data) : null, // ensure JSON is stringified
-        source
-    ], 		(err, result) => {
-		        if(err){
-		            console.log(err)
-		        }else{
-					res.json(result);
-		        }
-		    })
+//     pool.query(query, [
+//         created_by,
+//         updated_by,
+//         is_active,
+//         user_name,
+//         user_id,
+//         email_id,
+//         alert_type,
+//         alert_message,
+//         alert_level || 'info',
+//         status || 'unread',
+//         expiry_at,
+//         link_url,
+//         meta_data ? JSON.stringify(meta_data) : null, // ensure JSON is stringified
+//         source
+//     ], 		(err, result) => {
+// 		        if(err){
+// 		            console.log(err)
+// 		        }else{
+// 					res.json(result);
+// 		        }
+// 		    })
+// });
+
+//import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: "email-smtp.us-east-1.amazonaws.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.AWS_SES_SMTP_USER,
+    pass: process.env.AWS_SES_SMTP_PASS
+  }
 });
+
+app.post("/alerts/add", (req, res) => {
+  const {
+    created_by,
+    updated_by,
+    is_active,
+    user_name,
+    user_id,
+    email_id,
+    alert_type,
+    alert_message,
+    alert_level,
+    status,
+    expiry_at,
+    link_url,
+    meta_data,
+    source
+  } = req.body;
+
+  const query = `
+    INSERT INTO alerts (
+      created_by, updated_by, is_active, user_name, user_id, email_id,
+      alert_type, alert_message, alert_level, status, expiry_at,
+      link_url, meta_data, source
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  pool.query(
+    query,
+    [
+      created_by,
+      updated_by,
+      is_active,
+      user_name,
+      user_id,
+      email_id,
+      alert_type,
+      alert_message,
+      alert_level || "info",
+      status || "unread",
+      expiry_at,
+      link_url,
+      meta_data ? JSON.stringify(meta_data) : null,
+      source
+    ],
+    async (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      // If no email provided
+      if (!email_id) {
+        return res.json({
+          message: "Alert added but no email sent (no email_id provided)",
+          alertId: result.insertId
+        });
+      }
+
+      try {
+        const info = await transporter.sendMail({
+          from: "alerts@lms-erp.com", // must be verified in SES
+          to: email_id,
+          subject: `New Alert: ${alert_type}`,
+          html: `
+            <h3>${alert_type?.toUpperCase()} Alert</h3>
+            <p>${alert_message}</p>
+            <p><strong>Level:</strong> ${alert_level || "info"}</p>
+            ${link_url ? `<p><a href="${link_url}">View More</a></p>` : ""}
+          `
+        });
+
+        console.log("Email sent:", info.messageId);
+
+        return res.json({
+          message: "Alert added and email sent",
+          alertId: result.insertId,
+          emailId: info.messageId
+        });
+      } catch (emailErr) {
+        console.error("Error sending email:", emailErr);
+        return res.json({
+          message: "Alert added but email failed",
+          alertId: result.insertId,
+          emailError: emailErr.message
+        });
+      }
+    }
+  );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.get('/alerts/getAlerts',(req,res) => {
