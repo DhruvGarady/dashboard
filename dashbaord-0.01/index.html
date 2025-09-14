@@ -84,12 +84,55 @@ body {
 		           <div class="pt-2 pb-3">
 		            <input type="submit" class="btn btn-primary btn-block" value="Login" onclick="userLogin()" />
 		        	</div> 
+
+                      <!-- Create Account Option -->
+            <div class="text-center pb-2">
+                <span>Not a member?</span>
+                <a href="javascript:void(0);" onclick="openRegisterDialog()" class="btn btn-link" style="padding:0;">Create Account</a>
+            </div>     
 		       <!--  </form> -->
 		        <!-- <div class="text-center pt-3">Not a member? <a href="_webpages/registrationPage.html" style="color:blue;cursor:pointer;" >Register Here</a></div> -->
 		    </div>
 
 		</div>
   </div>
+
+<!-- Registration Popup (hidden initially) -->
+<div id="registerDialog" title="Create Account" style="display:none;">
+  <form id="registerForm" enctype="multipart/form-data">
+    <div class="form-group pt-2">
+      First Name <span style="color:red">*</span>
+      <input type="text" id="first_name" name="first_name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      Last Name <span style="color:red">*</span>
+      <input type="text" id="last_name" name="last_name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      Email <span style="color:red">*</span>
+      <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      Profile Picture
+      <input type="file" id="profile_picture" name="profile_picture" class="form-control-file">
+    </div>
+
+    <div class="form-group">
+      Username <span style="color:red">*</span>
+      <input type="text" id="reg_username" name="username" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      Password <span style="color:red">*</span>
+      <input type="password" id="reg_password" name="password" class="form-control" required>
+    </div>
+  </form>
+</div>
+
+
 </div>
   
 

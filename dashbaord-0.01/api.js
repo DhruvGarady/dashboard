@@ -6,6 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 
 
@@ -220,6 +221,167 @@ app.post('/user/addDOCuser', upload.single("profile_picture"), async (req, res) 
 
 
 
+// User Registration
+app.post("/user/register", upload.single("profile_picture"), async (req, res) => {
+  try {
+    const { first_name, last_name, email, username, password } = req.body;
+    if (!password) return res.status(400).send("Password is required");
+
+    // Upload profile picture if provided
+    let profileImageUrl = null;
+    if (req.file) {
+      profileImageUrl = await uploadToS3(req.file);
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Generate activation token and expiry
+    const token = crypto.randomBytes(32).toString("hex");
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Insert user into DB
+    const sql = `
+      INSERT INTO doc_users (
+        first_name, last_name, email, username, password_hash, profile_picture,
+        user_type, is_active, activation_token, token_expiry
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const values = [
+      first_name,
+      last_name,
+      email,
+      username,
+      hashedPassword,
+      profileImageUrl,
+      "ADMIN",
+      "N",
+      token,
+      tokenExpiry,
+    ];
+
+    pool.query(sql, values, async (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).send("Database error");
+      }
+
+      // Send activation email
+      const transporter = nodemailer.createTransport({
+        host: "email-smtp.us-east-1.amazonaws.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.AWS_SES_SMTP_USER,
+          pass: process.env.AWS_SES_SMTP_PASS,
+        },
+      });
+
+      const activationLink = `http://lms-erp.com:3002/user/activate?token=${token}`;
+
+      const mailOptions = {
+        from: "no-reply@lms-erp.com",
+        to: email,
+        subject: "Activate Your Account",
+        html: `
+          <h3>Welcome, ${first_name}!</h3>
+          <p>Click below to activate your account:</p>
+          <a href="${activationLink}">Activate My Account</a>
+          <p>This link will expire in 24 hours.</p>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+      res.status(201).send({
+        message: "User registered successfully. Check your email to activate your account.",
+        userId: result.insertId,
+        profileImageUrl,
+      });
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+// Account Activation
+// app.get("/user/activate", (req, res) => {
+//   const { token } = req.query;
+
+//   pool.query(
+//     "SELECT id, token_expiry FROM doc_users WHERE activation_token = ? AND is_active = 'N'",
+//     [token],
+//     (err, results) => {
+//       if (err) return res.status(500).send("Server error");
+
+//       if (results.length === 0) {
+//         return res.send("Invalid or expired token");
+//       }
+
+//       const user = results[0];
+//       if (new Date() > user.token_expiry) {
+//         return res.send("Activation link has expired. Please request a new one.");
+//       }
+
+//       // Activate user
+//       pool.query(
+//         "UPDATE doc_users SET is_active = 'Y', activation_token = NULL, token_expiry = NULL WHERE id = ?",
+//         [user.id],
+//         (err2) => {
+//           if (err2) return res.status(500).send("Server error");
+//           res.send("Account activated successfully! You can now log in.");
+//         }
+//       );
+//     }
+//   );
+// });
+app.get("/user/activate", (req, res) => {
+  const { token } = req.query;
+
+  pool.query(
+    "SELECT id, token_expiry FROM doc_users WHERE activation_token = ? AND is_active = 'N'",
+    [token],
+    (err, results) => {
+      if (err || !results || results.length === 0) {
+        console.error(err);
+        return res.redirect("https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/activation/activation-error.html");
+      }
+
+      const user = results[0];
+
+      // Check if token expired
+      if (new Date() > user.token_expiry) {
+        return res.redirect("https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/activation/activation-error.html");
+      }
+
+      // Activate user
+      pool.query(
+        "UPDATE doc_users SET is_active = 'Y', activation_token = NULL, token_expiry = NULL WHERE id = ?",
+        [user.id],
+        (err2) => {
+          if (err2) {
+            console.error(err2);
+            return res.redirect("https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/activation/activation-error.html");
+          }
+
+          res.redirect("https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/activation/activation-success.html");
+        }
+      );
+    }
+  );
+});
+
+
+
+
+
+
+
+
+
 // USER UPDATE WITH S3 UPLOAD
 
 app.put('/user/updateDOCuser/:id', upload.single("profile_picture"), async (req, res) => {
@@ -277,7 +439,7 @@ app.put('/user/updateDOCuser/:id', upload.single("profile_picture"), async (req,
       // use userId to overwrite existing picture in S3
       profileImageUrl = await uploadToS3(req.file, userId);
     }
-
+    
     // if password provided, hash it, otherwise keep old
     let hashedPassword = null;
     if (password_hash) {
