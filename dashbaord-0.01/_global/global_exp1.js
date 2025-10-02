@@ -89,7 +89,7 @@ function onUserLoginSuccess(response) {
 		//alert("Login Successful.")
 	    sessionStorage.setItem("USER_ID", response.user_id);
 		sessionStorage.setItem("USERNAME",response.username);
-		sessionStorage.setItem("PROFILE_PICTURE", response.profile_picture || "https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/default-profilepic.jpg");
+		sessionStorage.setItem("PROFILE_PICTURE", response.profile_picture || "https://lms-imgs.s3.ap-south-1.amazonaws.com/default-profilepic.jpg");
 
 		location.href = "_webpages/home.html";
 }
@@ -168,7 +168,7 @@ function setUsrName(){
 	if(profile_picture != "" && profile_picture != null && profile_picture != undefined){
 		$("#profilePicture").attr("src", profile_picture);
 	}else{
-		$("#profilePicture").attr("src", "https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/default-profilepic.jpg");
+		$("#profilePicture").attr("src", "https://lms-imgs.s3.ap-south-1.amazonaws.com/default-profilepic.jpg");
 	}
 }
 

@@ -673,7 +673,7 @@ app.post('/user/login', (req, res) => {
             const hashedPassword = results[0].password_hash;
             const userId = results[0].id;
             const usernameFromDB = results[0].username;   // ✅ renamed
-            const profilePicture = results[0].profile_picture || "https://us-east-virginia-s3.s3.us-east-1.amazonaws.com/default-profilepic.jpg"; 
+            const profilePicture = results[0].profile_picture || "https://lms-imgs.s3.ap-south-1.amazonaws.com/default-profilepic.jpg"; 
 
             bcrypt.compare(password_hash, hashedPassword, (err, isMatch) => {
                 if (err) {
